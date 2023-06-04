@@ -1,13 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Main from './main'
+import Main from './main';
+import Pizza from './pizza';
+
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Main />
+    {/* <Main /> */}
+    <Pizza/>
   </React.StrictMode>
 );
 

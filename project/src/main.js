@@ -5,7 +5,7 @@ import MainUnder from './components/MainUnder';
 
 function Main() {
     return (
-        <div>
+        <div className='background'>
             <Header></Header>
             <MainUnder></MainUnder>
             <Carousel></Carousel>
