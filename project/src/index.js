@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Main from './main';
 import Pizza from './pizza';
+import Owner from './owner'
 
 import reportWebVitals from './reportWebVitals';
 
@@ -11,6 +12,7 @@ root.render(
   <React.StrictMode>
     {/* <Main /> */}
     <Pizza/>
+    {/* <Owner/> */}
   </React.StrictMode>
 );
 

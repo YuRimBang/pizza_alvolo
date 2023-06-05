@@ -2,7 +2,6 @@ import Header from './components/Header';
 import Carousel from './components/Carousel';
 import UnderMenu from './components/UnderMenu';
 import MainUnder from './components/MainUnder';
-import OwnerMyPage from './components/OwnerMyPage';
 
 function Main() {
     return (
@@ -11,7 +10,6 @@ function Main() {
             <MainUnder></MainUnder>
             <Carousel></Carousel>
             <UnderMenu></UnderMenu>
-            <OwnerMyPage></OwnerMyPage>
         </div>
     );
 }
