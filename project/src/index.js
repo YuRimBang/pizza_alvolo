@@ -6,13 +6,15 @@ import Pizza from "./pizza";
 import Owner from "./owner";
 import Shopping from "./shopping";
 import reportWebVitals from "./reportWebVitals";
+import App from './Apps';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     {/* <Main /> */}
     {/* <Pizza /> */}
-    <Owner />
+    {/* <Owner /> */}
+    <App />
     {/* <Shopping></Shopping> */}
   </React.StrictMode>
 );
