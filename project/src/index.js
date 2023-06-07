@@ -4,15 +4,16 @@ import "./index.css";
 import Main from "./main";
 import Pizza from "./pizza";
 import Owner from "./owner";
-
+import Shopping from "./shopping";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     {/* <Main /> */}
-    <Pizza />
+    {/* <Pizza /> */}
     {/* <Owner /> */}
+    <Shopping></Shopping>
   </React.StrictMode>
 );
 
