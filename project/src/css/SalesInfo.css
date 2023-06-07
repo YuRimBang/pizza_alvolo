@@ -1,0 +1,32 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .sales_info {
+    width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .sales_info_title {
+    font-size: 40px;
+    text-align: center;
+    padding: 50px 0;
+  }
+  
+  .sales_info_title {
+    width: 200px;
+    padding: 50px 0 20px 0;
+    border-bottom: 1px solid gray;
+  }
+  
+  .sales_info .sales_info_title .sales_info_title_text {
+    font-weight: bold;
+    font-size: 22px;
+  }
+  
+  .sales_info_content {
+    padding: 100px 120px;
+  }

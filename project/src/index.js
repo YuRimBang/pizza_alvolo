@@ -12,8 +12,8 @@ root.render(
   <React.StrictMode>
     {/* <Main /> */}
     {/* <Pizza /> */}
-    {/* <Owner /> */}
-    <Shopping></Shopping>
+    <Owner />
+    {/* <Shopping></Shopping> */}
   </React.StrictMode>
 );
 
