@@ -21,6 +21,7 @@
 }
 .delivery{
     border-right: 1px solid #fff;
+    width: 430px;
 }
 .icon{
     height: 64px;
@@ -34,4 +35,10 @@
     color: #fff;
     height: 120px;
     line-height: 120px;
+    text-decoration: none;
+}
+
+Link{
+    border: 1px white;
+     text-decoration: none;
 }

@@ -4,6 +4,9 @@ import "../css/MyPageInfo.css";
 
 function MyPageInfo() {
   const [myInfo, setMyInfo] = useState({});
+  const [isAddressEditing, setAddressEditing] = useState(false);
+  const [address, setAddress] = useState("");
+  const [detailAddress, setDetailAddress] = useState("");
 
   useEffect(() => {
     selectUser();
@@ -13,11 +16,9 @@ function MyPageInfo() {
     const result = await axios.get("/userInfo");
     const userInfo = result.data[0];
     setMyInfo(userInfo);
+    setAddress(userInfo.address);
+    setDetailAddress(userInfo.addressDetail);
   };
-
-  const [isAddressEditing, setAddressEditing] = useState(false);
-  const [address, setAddress] = useState(myInfo.address);
-  const [detailAddress, setDetailAddress] = useState(myInfo.detailAddress);
 
   const handleAddressClick = () => {
     setAddressEditing(true);
@@ -29,6 +30,26 @@ function MyPageInfo() {
 
   const handleDetailAddressChange = (e) => {
     setDetailAddress(e.target.value);
+  };
+
+  const handleSaveClick = async () => {
+    try {
+      const result = await axios.post("/userInfo", {
+        pk: myInfo.pk, // 유저의 고유 식별자
+        address: address,
+        addressDetail: detailAddress,
+      });
+
+      if (result.data.success) {
+        console.log("주소 업데이트 성공");
+        setAddressEditing(false);
+        alert("주소가 변경되었습니다.");
+      } else {
+        console.log("주소 업데이트 실패");
+      }
+    } catch (error) {
+      console.log("주소 업데이트 요청 실패:", error);
+    }
   };
 
   return (
@@ -138,7 +159,9 @@ function MyPageInfo() {
         </div>
         <div className="edit_container_button">
           <div className="gray_button">취소</div>
-          <div className="blue_button">확인</div>
+          <div className="blue_button" onClick={handleSaveClick}>
+            확인
+          </div>
         </div>
       </div>
     </div>

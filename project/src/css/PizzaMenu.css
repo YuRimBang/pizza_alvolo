@@ -7,16 +7,18 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    width: 1200px;
+    width: 1200px
 }
 
-.pizza_menu{
-    display: flex;
-    width: 580px;
-    height: 230px;
-    background-color: white;
-    margin: 30px 0px;
+.pizza_menu {
+  display: flex;
+  width: 580px;
+  height: 230px;
+  background-color: white;
+  margin: 30px 0px;
+  position: relative;
 }
+
 
 .menu1{
     margin: 0;
@@ -53,11 +55,13 @@
     margin-bottom: 5px;
 }
 
-.size{
-    font-size:25px;
-    font-weight: 700;
-    margin-right: 10px;
-    color: aqua;
+.size {
+  font-size: 25px;
+  font-weight: 700;
+  margin-right: 10px;
+  color: aqua;
+  position: relative;
+  z-index: 1;
 }
 
 .price{
@@ -66,9 +70,8 @@
     margin-right: 10px;
 }
 
-.material{
+.materialBox{
     display: flex;
-    flex-wrap: wrap;
     width: 300px;
     margin-top: 30px;
 }
@@ -83,3 +86,39 @@
     line-height: 30px;
     margin-right: 10px;
 }
+
+.hiddenBox {
+    opacity: 0;
+    display: flex;
+    z-index: 100;
+    position: absolute;
+    width: 580px;
+    height: 230px;
+    background-color: rgba(0, 0, 0, .8);
+    box-shadow: 13.4px 13.4px 16px 0 rgba(53, 48, 48, .17);
+}
+
+.hiddenBox:hover{
+    opacity: 1;
+}
+
+  
+  .detail,
+  .min_shopping {
+    margin: 90px 10px 80px 50px;
+    border: 3px solid #41b6e6;
+    border-radius: 45%;
+    color: #41b6e6;
+    text-align: center;
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+  }
+  
+  .detail:hover,
+  .min_shopping:hover {
+    background-color: #41b6e6;
+    color: white;
+  }
+  
+  

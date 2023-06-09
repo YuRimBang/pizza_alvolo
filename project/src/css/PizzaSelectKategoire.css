@@ -5,10 +5,9 @@
 
 .kategoire{
     display: flex;
-    margin-left: 900px;
 }
 
-select{
+.option{
     height: 50px;
     width: 300px;
     color: lightslategrey;

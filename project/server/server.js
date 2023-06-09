@@ -5,42 +5,143 @@ const PORT = process.env.PORT || 4000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./config/db.js");
-// const upload = multer({ dest: 'uploads/' }); // 파일 업로드를 처리할 경로 설정
+const { createProxyMiddleware } = require('http-proxy-middleware');
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + '_' + file.originalname);
-  }
+app.use(
+  '/shoppingBasket',
+  createProxyMiddleware({
+    target: 'http://localhost:4000',
+    changeOrigin: true,
+  })
+);
+
+app.get('/', (req, res) => {
+  console.log('/root');
+  res.send('/root');
 });
-
-const upload = multer({ storage: storage });
-
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get("/pizza", (req, res) => {
+  console.log("/pizza");
+  let { activeTap, category, op } = req.query;
+  console.log(category);
 
-app.get("/", (req, res) => {
-  console.log("/root");
-});
+  let query = "SELECT * FROM product";
 
-app.get("/product", (req, res) => {
-  console.log("/product");
-  db.query("select * from product", (err, data) => {
+  if (category === "장인") {
+    query += " WHERE category='장인'";
+  } else if (category === "달인") {
+    query += " WHERE category='달인'";
+  } else if (category === "명품") {
+    query += " WHERE category='명품'";
+  }
+
+  if (op === "lowPay") {
+    query += " ORDER BY price ASC";
+  } else if (op === "hiPay") {
+    query += " ORDER BY price DESC";
+  } else {
+    query += " ORDER BY launchDate DESC";
+  }
+
+  db.query(query, (err, data) => {
     if (!err) {
-      // console.log(data)
       res.send(data);
       console.log(data);
     } else {
       console.log(err);
+      res.status(500).send("Error");
     }
   });
 });
 
+app.post("/shoppingPizza", (req, res) => {
+  const { userPk, menuPk, price, cnt } = req.query;
+
+  db.query(
+    "SELECT * FROM shopping_basket WHERE userPk = ? AND productPk = ?",
+    [userPk, menuPk],
+    function (err, rows, fields) {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error");
+      } else {
+        if (rows.length > 0) {
+          res.send("이미 장바구니에 존재하는 상품입니다");
+        } else {
+          db.query(
+            "INSERT INTO shopping_basket (userPk, productPk, price, cnt) VALUES (?, ?, ?, ?)",
+            [userPk, menuPk, price, cnt],
+            function (err, rows, fields) {
+              if (err) {
+                console.log(err);
+                res.status(500).send("장바구니 실패");
+              } else {
+                console.log("추가 성공");
+                res.send("장바구니에 추가 했습니다");
+              }
+            }
+          );
+        }
+      }
+    }
+  );
+});
+
+
+app.get("/shopping", (req, res) => {
+  const userPk = req.query.userPk;
+
+  db.query(
+    "SELECT * FROM shopping_basket WHERE userPk = ?",
+    [userPk],
+    (err, rows) => {
+      if (err) {
+        console.error("장바구니 데이터를 가져오는데 실패했습니다:", err);
+        res.status(500).send("서버 에러");
+      } else {
+        const shoppingData = rows.map((row) => {
+          const productPk = row.productPk;
+          return new Promise((resolve, reject) => {
+            // 피자 메뉴 데이터 가져오기
+            db.query(
+              "SELECT * FROM product WHERE Pk = ?",
+              [productPk],
+              (err, productRows) => {
+                if (err) {
+                  console.error("상품 데이터를 가져오는데 실패했습니다:", err);
+                  reject(err);
+                } else {
+                  const pizzaData = productRows[0];
+                  const shoppingItem = {
+                    menuName: pizzaData.menuName,
+                    price: row.price,
+                    cnt: row.cnt,
+                    size: pizzaData.size,
+                  };
+                  resolve(shoppingItem);
+                }
+              }
+            );
+          });
+        });
+
+        Promise.all(shoppingData)
+          .then((items) => {
+            res.json(items);
+          })
+          .catch((err) => {
+            console.error("상품 데이터를 가져오는데 실패했습니다:", err);
+            res.status(500).send("서버 에러");
+          });
+      }
+    }
+  );
+});
+  
 app.get("/userInfo", (req, res) => {
   db.query("select * from user where pk = 1", (err, data) => {
     if (!err) {
@@ -50,6 +151,34 @@ app.get("/userInfo", (req, res) => {
     }
   });
 });
+
+app.post("/shoppingCancel", (req, res) => {
+  const pk = req.body.pk;
+  const userPk = req.body.userPk;
+
+  db.query("DELETE FROM shopping_basket WHERE pk = ? AND userPk = ?", [pk, userPk], (err, data) => {
+    if (!err) {
+      res.send(data);
+    } else {
+      console.log(err);
+      res.status(500).send("Error canceling shopping item");
+    }
+  });
+});
+
+app.post("/order", (req, res) => {
+  const userPk = req.body.userPk;
+
+  db.query("DELETE FROM shopping_basket WHERE userPk = ?", [userPk], (err, data) => {
+    if (!err) {
+      res.send(data);
+    } else {
+      console.log(err);
+      res.status(500).send("Error canceling shopping item");
+    }
+  });
+});
+
 
 app.get("/purchaseHistory", (req, res) => {
   db.query(
@@ -88,85 +217,26 @@ app.post("/review", (req, res) => {
   );
 });
 
-// 메뉴 등록
-app.post('/menuRegistration', upload.single('file'),  (req, res) => {
-  const file = req.file;
-  const imagePath = file.path; // 업로드된 파일의 경로
-
-  console.log('menuReigstration');
-
-  const storePk = JSON.parse(req.body.menuData).storePk;
-  const menuName = JSON.parse(req.body.menuData).menuName;
-  const menuName_eng = JSON.parse(req.body.menuData).menuName_eng;
-  const category = JSON.parse(req.body.menuData).category;
-  const description = JSON.parse(req.body.menuData).description;
-  const tag = JSON.parse(req.body.menuData).tag;
-  const ingredient = JSON.parse(req.body.menuData).ingredient;
-  const size = JSON.parse(req.body.menuData).size;
-  const price = JSON.parse(req.body.menuData).price;
-
+app.post("/userInfo", (req, res) => {
+  const pk = req.body.pk;
+  const address = req.body.address;
+  const addressDetail = req.body.addressDetail;
 
   db.query(
-    "INSERT INTO product (storePk, menuName, engName, category, description, tag, ingredient, size, price, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [storePk, menuName, menuName_eng, category, description, tag, ingredient, size, price, imagePath],
-    function (err, rows, fields) {
-      if ((err, rows, fields)) {
-        if (err) {
-          console.log("실패");
-        } else {
-          console.log("성공");
-        }
-      }
-    }
-  );
-});
-
-// 판매 수량 확인
-app.get("/SalesHistory", (req, res) => {
-  db.query(
-    "SELECT p.menuName, SUM(op.cnt) AS cnt " +
-    "FROM product p " +
-    "JOIN order_product op ON p.pk = op.productPk " +
-    "GROUP BY p.menuName",
-      (err, data) => {
-      if (!err) {
-        res.send(data);
-        console.log(data);
+    "UPDATE user SET address = ?, addressDetail = ? WHERE pk = ?",
+    [address, addressDetail, pk],
+    (err, rows, fields) => {
+      if (err) {
+        console.log("주소 업데이트 실패:", err);
+        res.json({ success: false });
       } else {
-        console.log(err);
+        console.log("주소 업데이트 성공");
+        res.json({ success: true });
       }
     }
   );
 });
 
-//차트
-app.get('/sales', (req, res) => {
-  db.query(
-    "SELECT CASE WHEN DAYOFWEEK(orderDate) = 1 THEN '일요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 2 THEN '월요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 3 THEN '화요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 4 THEN '수요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 5 THEN '목요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 6 THEN '금요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 7 THEN '토요일' " +
-    "END AS dayOfWeek, " +
-    "SUM(op.price * op.cnt) AS totalSales " +
-    "FROM `order` o JOIN `order_product` op ON o.pk = op.orderPk " +
-    "GROUP BY dayOfWeek ORDER BY DAYOFWEEK(orderDate);",
-      (err, data) => {
-      if (!err) {
-        res.send(data);
-        console.log(data);
-      } else {
-        console.log(err);
-      }
-    }
-  );
+app.listen(PORT, () => {
+  console.log(`Server On : http://localhost:${PORT}`);
 });
-
-
-
-
-app.listen(PORT, ()=>{
-    console.log(`Server On : http://localhost:${PORT}`);
-})

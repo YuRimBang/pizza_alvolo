@@ -11,3 +11,9 @@
 .my_order_info {
   margin: 0 100px;
 }
+
+.noHistory{
+  color: black;
+  text-align: center;
+  margin-top: 50px;
+}

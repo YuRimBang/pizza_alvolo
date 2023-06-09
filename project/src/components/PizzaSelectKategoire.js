@@ -1,18 +1,29 @@
-import '../css/PizzaSelectKategoire.css';
-import React from "react"
+import React, { useState } from "react";
 
-function PizzaSelectKategoire()
-{
-    return(
-        <div className="kategoire">
-            <select>
-                <option value="popular" className="op">인기순</option>
-                <option value="new" className="op">신상품순</option>
-                <option value="lowPay" className="op">가격낮은순</option>
-                <option value="hiPay" className="op">가격높은순</option>
-            </select>
-        </div>
-    );
+function PizzaSelectKategoire({ activeTab, onOptionChange }) {
+  const [selectedOption, setSelectedOption] = useState();
+
+  const handleOptionChange = (event) => {
+    const optionValue = event.target.value;
+    setSelectedOption(optionValue);
+    onOptionChange(optionValue);
+  };
+
+  return (
+    <div className="kategoire">
+      <select className="option" value={selectedOption} onChange={handleOptionChange}>
+        <option value="new" className="op">
+          신상품순
+        </option>
+        <option value="lowPay" className="op">
+          가격낮은순
+        </option>
+        <option value="hiPay" className="op">
+          가격높은순
+        </option>
+      </select>
+    </div>
+  );
 }
 
 export default PizzaSelectKategoire;

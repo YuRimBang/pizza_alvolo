@@ -11,7 +11,7 @@ function OwnerPageHeader() {
             </div>
         </div>
         <div className="mypage_menutab">
-            <NavLink to="/">
+            <NavLink to="/registMenu">
             <div className="menutab_page_title">
                 <h5 className="tab">
                 메뉴 등록

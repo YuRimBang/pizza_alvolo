@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import '../css/MenuRegistration.css';
+import axios from 'axios';
+
 
 function MenuRegistration() {
 
@@ -133,12 +135,9 @@ function MenuRegistration() {
     const { name, checked } = e.target;
     setInputs((prevState) => ({
       ...prevState,
-      [name]: checked,
-      P_price: prevState.P ? prevState.P_price : "",
-      R_price: prevState.R ? prevState.R_price : "",
-      L_price: prevState.L ? prevState.L_price : "",
+      [name]: checked
     }));
-    };
+  };
 
 
   // 파일 선택시
@@ -206,7 +205,7 @@ function MenuRegistration() {
         </form>
 
         {/* 사진 등록 */}
-        <div className="form-group">
+        <div class="form-group">
           <label for="photo-upload">피자 사진 등록</label>
           <div className="file-input">
             <input type="file" name="file" onChange={handleFileChange}></input>

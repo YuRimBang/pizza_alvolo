@@ -22,7 +22,7 @@ function MyPageHeader() {
         <div className="menutab_page_title">
           <h5 className="tab">비행기스탬프</h5>
         </div>
-        <NavLink to="/">
+        <NavLink to="/myPage">
           <div className="menutab_page_title">
             <h5 className="tab">정보수정</h5>
           </div>
