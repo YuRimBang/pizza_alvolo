@@ -1,5 +1,6 @@
 import "../css/MyPageHeader.css";
 import { NavLink } from "react-router-dom";
+
 function MyPageHeader() {
   return (
     <div>
