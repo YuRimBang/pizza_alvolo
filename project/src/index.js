@@ -3,18 +3,19 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import Main from "./main";
 import Pizza from "./pizza";
-import Owner from "./owner";
+import OwnerPage from "./OwnerPage";
 import Shopping from "./shopping";
 import reportWebVitals from "./reportWebVitals";
 import App from './Apps';
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     {/* <Main /> */}
     {/* <Pizza /> */}
-    {/* <Owner /> */}
-    <App />
+    <OwnerPage />
+    {/* <App /> */}
     {/* <Shopping></Shopping> */}
   </React.StrictMode>
 );

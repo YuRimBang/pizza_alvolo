@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import './App.css'
 import axios from 'axios';
 
@@ -7,16 +8,29 @@ import axios from 'axios';
 
 function App() {
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    selectAll();
+  }, [])
+
   const selectAll=async()=>{ // 비동기
-    alert("selectAll")
-    const result = await axios.get('/product')
-    console.log(result)
+    const result = await axios.get('/product');
+    setData(result.data);
   }
 
   return (
     <div id="App">
       <h1>React-Express-MySQL 연결</h1>
-      <button onClick={selectAll}>모두조회</button>
+      <div>
+        {data.map((item) => (
+          <div key={item.pk}>
+            <p>{item.name}</p>
+            <p>{item.pk}</p>
+          </div>
+        ))}
+      </div>
+
     </div>
   )
 }
