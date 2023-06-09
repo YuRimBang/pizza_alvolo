@@ -16,13 +16,13 @@ function MenuRegistration() {
     P_price: "",
     R_price: "",
     L_price: "",
-    storePk:1,
+    storePk: 1,
   })
 
-  // const [selectedFile, setSelectedFile] = useState(null);
+  const [file, setFile] = useState(null);
 
 
-  const {menuName, menuName_eng, category, description, tag, ingredient, P_price, R_price, L_price} = inputs;
+  const {menuName, menuName_eng, category, description, tag, ingredient, P_price, R_price, L_price, storePk} = inputs;
 
   const onChange = (e) => {
     const value = e.target.value;
@@ -30,40 +30,103 @@ function MenuRegistration() {
 
     setInputs({
       ...inputs,
-      [name]: value
+      [name]: value,
     })
   }
 
 
   const submitMenu = () => {
-    const menu = {
-      storePk: inputs.storePk,
-      menuName: inputs.menuName,
-      menuName_eng: inputs.menuName_eng,
-      category: inputs.category,
-      description: inputs.description,
-      tag: inputs.tag,
-      ingredient: inputs.ingredient,
-      size: "P",
-      price: 20,
-    };
 
-    fetch("/menuRegistration", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(menu),
-    })
-    .then((res) => res.json())
-    .then((json) => {
-      setInputs(json.text);
-    })
-    .catch(error => {
-      console.log(error);
-      // P 사이즈 INSERT 실패
-    });
-  }
+    //P가 체크됐을 때
+    if(inputs.P){
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      const menuP = {
+        storePk: 1,
+        menuName: inputs.menuName,
+        menuName_eng: inputs.menuName_eng,
+        category: inputs.category,
+        description: inputs.description,
+        tag: inputs.tag,
+        ingredient: inputs.ingredient,
+        size: "P",
+        price: parseInt(inputs.P_price, 10)
+      };
+
+      formData.append("menuData", JSON.stringify(menuP)); // 메뉴 데이터도 formData에 추가
+  
+      fetch("/menuRegistration", {
+        method: "post",
+        body: formData,
+      })
+      .then((res) => res.json())
+      .then((json) => {
+        setInputs(json.text);
+      });
+  
+    }
+
+    //R이 체크됐을 때
+    if(inputs.R){
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      const menuR = {
+        storePk: 1,
+        menuName: inputs.menuName,
+        menuName_eng: inputs.menuName_eng,
+        category: inputs.category,
+        description: inputs.description,
+        tag: inputs.tag,
+        ingredient: inputs.ingredient,
+        size: "R",
+        price: parseInt(inputs.R_price, 10)
+      };
+  
+      formData.append("menuData", JSON.stringify(menuR)); 
+
+      fetch("/menuRegistration", {
+        method: "post",
+        body: formData,
+      })
+      .then((res) => res.json())
+      .then((json) => {
+        setInputs(json.text);
+      });
+  
+    }
+
+    //L이 체크됐을 때
+    if(inputs.L){
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      const menuL = {
+        storePk: 1,
+        menuName: inputs.menuName,
+        menuName_eng: inputs.menuName_eng,
+        category: inputs.category,
+        description: inputs.description,
+        tag: inputs.tag,
+        ingredient: inputs.ingredient,
+        size: "L",
+        price: parseInt(inputs.L_price, 10)
+      };
+  
+      formData.append("menuData", JSON.stringify(menuL)); // 메뉴 데이터도 formData에 추가
+
+      fetch("/menuRegistration", {
+        method: "post",
+        body: formData,
+      })
+      .then((res) => res.json())
+      .then((json) => {
+        setInputs(json.text);
+      });
+  
+    }
+  };
 
 
   const handleCheckboxChange = (e) => {
@@ -80,125 +143,14 @@ function MenuRegistration() {
 
   // 파일 선택시
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
   };
 
 
   const handleConfirmation = () => {
-
     submitMenu();
     alert("메뉴가 등록되었습니다.");
-
-    // if (inputs.P) {
-    //   // P 사이즈에 대한 INSERT 쿼리 실행
-    //   const dataP = {
-    //     storePk: 1,
-    //     menuName: inputs.menuName,
-    //     menuName_eng: inputs.menuName_eng,
-    //     category: inputs.category,
-    //     description: inputs.description,
-    //     tag: inputs.tag,
-    //     ingredient: inputs.ingredient,
-    //     size: "P",
-    //     price: parseInt(inputs.P_price, 10)
-    //   };
-  
-    //   axios
-    //   .post("/menuRegistration", dataP, {
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     }
-    //   })
-    //   .then(response => {
-    //     console.log(response.data);
-    //     // P 사이즈 INSERT 성공
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //     // P 사이즈 INSERT 실패
-    //   });
-    //   }
-  
-    // if (inputs.R) {
-    //   // R 사이즈에 대한 INSERT 쿼리 실행
-    //   const dataR = {
-    //     storePk: 1,
-    //     menuName: inputs.menuName,
-    //     menuName_eng: inputs.menuName_eng,
-    //     category: inputs.category,
-    //     description: inputs.description,
-    //     tag: inputs.tag,
-    //     ingredient: inputs.ingredient,
-    //     size: "R",
-    //     price: parseInt(inputs.R_price, 10)
-    //   };
-  
-    //   axios
-    //   .post("/menuRegistration", dataR, {
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     }
-    //   })
-    //   .then(response => {
-    //     console.log(response.data);
-    //     // P 사이즈 INSERT 성공
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //     // P 사이즈 INSERT 실패
-    //   });
-    //   }
-
-    // if (inputs.L) {
-    //   // L 사이즈에 대한 INSERT 쿼리 실행
-    //   const dataL = {
-    //     storePk: 1,
-    //     menuName: inputs.menuName,
-    //     menuName_eng: inputs.menuName_eng,
-    //     category: inputs.category,
-    //     description: inputs.description,
-    //     tag: inputs.tag,
-    //     ingredient: inputs.ingredient,
-    //     size: "L",
-    //     price: parseInt(inputs.L_price, 10)
-    //   };
-  
-    //   axios
-    //   .post("/menuRegistration", dataL, {
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     }
-    //   })
-    //   .then(response => {
-    //     console.log(response.data);
-    //     // P 사이즈 INSERT 성공
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //     // P 사이즈 INSERT 실패
-    //   });
-  
-    // }
-
-    
-  
-    // const formData = new FormData();
-    // formData.append("file", selectedFile);
-
-
-    // axios
-    // .post("/upload", formData) // 파일 업로드 요청
-    // .then(response => {
-    //   console.log(response.data);
-    //   // 파일 업로드 성공
-      
-    //   const fileUrl = response.data.fileUrl; // 파일의 주소
-
-    //   })
-    // .catch(error => {
-    //   console.log(error);
-    //   // 파일 업로드 실패
-    // });
   };
   
 
@@ -257,7 +209,8 @@ function MenuRegistration() {
         <div className="form-group">
           <label for="photo-upload">피자 사진 등록</label>
           <div className="file-input">
-            <input type="file" id="fileUrl" name="photo-upload" onChange={handleFileChange}></input>
+            <input type="file" name="file" onChange={handleFileChange}></input>
+            {file && <p>Selected file: {file.name}</p>}
           </div>
         </div>
 

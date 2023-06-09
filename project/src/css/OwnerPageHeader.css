@@ -28,3 +28,11 @@
   border-bottom: 1px solid gainsboro;
   padding: 20px 0;
 }
+
+a {
+  text-decoration: none;
+}
+
+.active {
+  border-bottom: 1px solid black;
+}

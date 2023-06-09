@@ -4,18 +4,22 @@ import OwnerPageHeader from "./components/OwnerPageHeader";
 import MenuRegistration from "./components/MenuRegistration";
 import SalesHistory from "./SalesHistory";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 function OwnerPage() {
-  const sales_info1 = {
-    menu: "하프앤하프(하와이안 치즈크러스트)",
-    cnt: "1",
-  };
-  const sales_info2 = {
-    menu: "하프앤하프(옥수수 치즈크러스트)",
-    cnt: "3",
-  };
 
-  const salesArr = [sales_info1, sales_info2];
+  const[salesHistory, setSalesHistory] = useState([]);
+
+  useEffect(() => {
+    selectSalesHistory();
+  }, [])
+
+  const selectSalesHistory = async () => {
+    const result = await axios.get("/SalesHistory");
+    const salesHistory = result.data;
+    setSalesHistory(salesHistory);
+  }
 
   return (
     <div className="background">
@@ -27,7 +31,7 @@ function OwnerPage() {
             <Route path="/" element={<MenuRegistration />} />
             <Route 
             path="/SalesHistory" 
-            element={<SalesHistory salesInfo={salesArr} />} />
+            element={<SalesHistory salesInfo={salesHistory} />} />
           </Routes>
         </Router>
       </div>

@@ -1,0 +1,10 @@
+.container {
+    width: 90vw;
+    max-width: 900px;
+}
+
+.chart-container {
+    width: 100%; 
+    height: 600px;
+}
+  

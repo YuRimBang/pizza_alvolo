@@ -11,3 +11,7 @@
 .sales_info {
   text-align: center;
 }
+
+canvas {
+  width: 600px;
+}

@@ -1,17 +1,18 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../css/MyPageInfo.css";
 
 function MyPageInfo() {
-  const myInfo = {
-    name: "정채연",
-    id: "dus0241",
-    password: "121212",
-    phoneNum: "64336366",
-    birthDate: "2002.04.01",
-    gender: "여성",
-    email: "rtfgvb098",
-    address: "경상북도 구미시 인동36길 23-34",
-    detailAddress: "000동 000호",
+  const [myInfo, setMyInfo] = useState({});
+
+  useEffect(() => {
+    selectUser();
+  }, []);
+
+  const selectUser = async () => {
+    const result = await axios.get("/userInfo");
+    const userInfo = result.data[0];
+    setMyInfo(userInfo);
   };
 
   const [isAddressEditing, setAddressEditing] = useState(false);
@@ -47,7 +48,7 @@ function MyPageInfo() {
             id="check_pk"
             type="password"
             name="pw"
-            value={myInfo.password}
+            value={myInfo.pw}
           ></input>
         </div>
         <div className="special_signInfo">
@@ -80,15 +81,28 @@ function MyPageInfo() {
           <input
             type="text"
             name="birthdate"
-            value={`${myInfo.birthDate} (${myInfo.gender})`}
+            value={`${myInfo.birth} (${myInfo.gender === 0 ? "남성" : "여성"})`}
             disabled
           ></input>
         </div>
         <div className="mypage_info_content_input">
-          <input type="text" name="email" value={myInfo.email} disabled></input>
+          <input
+            type="text"
+            name="email"
+            value={
+              myInfo.email
+                ? myInfo.email.substring(0, myInfo.email.indexOf("@"))
+                : ""
+            }
+            disabled
+          />
           <div>@</div>
           <select className="select_email" disabled>
-            <option value="naver.com">naver.com</option>
+            <option>
+              {myInfo.email
+                ? myInfo.email.substring(myInfo.email.indexOf("@") + 1)
+                : ""}
+            </option>
           </select>
         </div>
         <div className="mypage_info_content_input">
@@ -96,7 +110,7 @@ function MyPageInfo() {
             id="address"
             type="text"
             name="address"
-            value={address}
+            value={myInfo.address}
             onChange={handleAddressChange}
             readOnly={!isAddressEditing}
           ></input>
@@ -106,7 +120,7 @@ function MyPageInfo() {
           <input
             type="text"
             name="address_detail"
-            value={detailAddress}
+            value={myInfo.addressDetail}
             onChange={handleDetailAddressChange}
             readOnly={!isAddressEditing}
           ></input>
