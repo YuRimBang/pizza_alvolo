@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.mypage {
+  width: 1200px;
+  margin: 0 auto;
+}
+
+.my_order_info {
+  margin: 0 100px;
+}
+
+.noHistory{
+  color: black;
+  text-align: center;
+  margin-top: 50px;
+}

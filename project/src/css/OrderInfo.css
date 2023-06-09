@@ -1,0 +1,32 @@
+.order_info_list {
+  margin-top: 50px;
+  padding: 20px 0;
+  border-bottom: 1px solid gainsboro;
+}
+
+.order_info {
+  display: flex;
+  padding-bottom: 10px;
+}
+
+.order_info .info_name {
+  font-weight: bold;
+  width: 120px;
+}
+
+.order_info .info {
+  color: rgb(86, 86, 86);
+}
+
+.button_container {
+  margin-left: 330px;
+}
+
+.review {
+  width: 120px;
+  height: 30px;
+  color: rgb(0, 0, 139);
+  background-color: white;
+  font-size: 20px;
+  border-radius: 5px;
+}

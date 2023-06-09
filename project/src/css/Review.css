@@ -1,0 +1,32 @@
+*{
+    padding: 0;
+    margin: 0 auto;
+}
+
+.reviewContainer{
+    display: flex;
+    margin: 10px 250px;
+    height: 150px;
+    width: 1000px;
+}
+
+.textReview{
+    margin: 10px;
+    width: 500px;
+}
+
+.registbtn{
+    border: 3px #41B6E6 solid;
+    background-color: white;
+    width: 100px;
+    height: 30px;
+    margin: 60px 20px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.star{
+    text-align: center;
+    font-size: 30px;
+    line-height: 130px;
+}

@@ -1,0 +1,16 @@
+*{
+    padding: 0;
+    margin: 0 auto;
+}
+
+.kategoire{
+    display: flex;
+}
+
+.option{
+    height: 50px;
+    width: 300px;
+    color: lightslategrey;
+}
+
+

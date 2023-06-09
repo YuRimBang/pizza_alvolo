@@ -1,0 +1,29 @@
+.mypage_header_title {
+  font-size: 40px;
+  text-align: center;
+  padding: 50px 0;
+}
+
+.mypage_menutab {
+  display: flex;
+}
+
+.mypage_menutab .menutab_page_title {
+  width: 200px;
+}
+
+.mypage_menutab .menutab_page_title .tab {
+  font-size: 15px;
+  text-align: center;
+  color: gray;
+  border-bottom: 1px solid gainsboro;
+  padding: 20px 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.active {
+  border-bottom: 1px solid black;
+}

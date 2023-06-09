@@ -1,0 +1,39 @@
+.review_container {
+  margin: 10px 0;
+  display: flex;
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 80%;
+  height: 60px;
+  align-items: center;
+}
+
+.rating {
+  margin: 0 30px;
+}
+.rating_img {
+  width: 200px;
+  height: auto;
+}
+
+.review_context input {
+  border-radius: 5px;
+  width: 400px;
+  height: 40px;
+  font-size: 20px;
+  padding: 0 10px;
+}
+
+.regist_button_container {
+  margin: 0 10px;
+}
+
+.regist_button {
+  width: 100px;
+  height: 40px;
+  font-size: 20px;
+  color: white;
+  background-color: rgb(63, 63, 255);
+  border: blue;
+  border-radius: 5px;
+}

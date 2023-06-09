@@ -1,0 +1,15 @@
+*{
+    padding: 0;
+    margin: 0 auto;
+}
+
+.total_order{
+    background-color: #41B6E6;
+    color: white;
+    width: 400px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-weight: 900;
+    margin: 20px 0px 20px 950px;
+}

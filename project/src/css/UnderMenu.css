@@ -1,0 +1,44 @@
+.main2{
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.underBnt{
+    width: 873px;
+    height: 120px;
+    background-color: #f9423a;
+    display: flex;
+}
+.delivery,.packaging {
+    width: 50%;
+    height: 120px;
+    text-align: center;
+    line-height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.delivery{
+    border-right: 1px solid #fff;
+    width: 430px;
+}
+.icon{
+    height: 64px;
+    margin: auto 40px auto 0;
+    margin-top: 20px;
+}
+.icon-text{
+    display: inline-block;
+    font-family: Noto Sans CJK KR Medium;
+    font-size: 28px;
+    color: #fff;
+    height: 120px;
+    line-height: 120px;
+    text-decoration: none;
+}
+
+Link{
+    border: 1px white;
+     text-decoration: none;
+}
