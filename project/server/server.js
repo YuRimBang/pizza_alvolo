@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 4000;
 const db = require('./config/db.js')
+const bodyParser = require('body-parser');
+
 
 app.get("/", (req, res) => {
   console.log("/root");
@@ -66,6 +68,36 @@ app.post("/review", (req, res) => {
     }
   );
 });
+
+// 메뉴 등록
+app.post('/menuRegistration', (req, res) => {
+  console.log('menuReigstration');
+
+  const storePk = req.body.storePk;
+  const menuName = req.body.menuName;
+  const menuName_eng = req.body.menuName_eng;
+  const category = req.body.category;
+  const description = req.body.description;
+  const tag = req.body.tag;
+  const ingredient = req.body.ingredient;
+  const size = req.body.size;
+  const price = req.body.price;
+
+  db.query(
+    "INSERT INTO product (storePk, menuName, engName, category, description, tag, ingredient, size, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [storePk, menuName, menuName_eng, category, description, tag, ingredient, size, price],
+    function (err, rows, fields) {
+      if ((err, rows, fields)) {
+        if (err) {
+          console.log("실패");
+        } else {
+          console.log("성공");
+        }
+      }
+    }
+  );
+});
+
 
 app.listen(PORT, ()=>{
     console.log(`Server On : http://localhost:${PORT}`);
