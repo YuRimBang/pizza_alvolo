@@ -1,6 +1,4 @@
 import "./css/MyPage.css";
-import Header from "./components/Header";
-import MyPageHeader from "./components/MyPageHeader";
 import OrderInfo from "./components/OrderInfo";
 
 function PurchaseHistory({ orderInfo }) {

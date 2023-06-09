@@ -17,11 +17,11 @@ function OrderInfo({ orderInfoEach }) {
     <div className="order_info_list">
       <div className="order_info">
         <div className="info_name">주문일자</div>
-        <div className="info">{orderInfoEach.date}</div>
+        <div className="info">{orderInfoEach.orderDate}</div>
       </div>
       <div className="order_info">
         <div className="info_name">주문메뉴</div>
-        <div className="info">{orderInfoEach.menu}</div>
+        <div className="info">{orderInfoEach.menuName}</div>
       </div>
       <div className="order_info">
         <div className="info_name">결제금액</div>
@@ -29,11 +29,13 @@ function OrderInfo({ orderInfoEach }) {
       </div>
       <div className="order_info">
         <div className="info_name">배달지정보</div>
-        <div className="info">{orderInfoEach.deliveryInfo}</div>
+        <div className="info">
+          {orderInfoEach.address} {orderInfoEach.addressDetail}
+        </div>
       </div>
       <div className="order_info">
         <div className="info_name">주문매장</div>
-        <div className="info">{orderInfoEach.orderStore}</div>
+        <div className="info">{orderInfoEach.name}</div>
         <div className="button_container">
           <button className="review" onClick={handleReviewButtonClick}>
             후기작성
