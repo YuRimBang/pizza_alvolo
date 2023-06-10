@@ -22,8 +22,10 @@ function Login() {
       .then((response) => response.json())
       .then((data) => {
         console.log(data); // 로그인 응답 데이터 확인
-        if(data.success)
+        if(data.success){
+          localStorage.setItem("token", data.token);
         window.location.href = "/"
+        }
       })
       .catch((error) => {
         console.log(error);

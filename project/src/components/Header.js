@@ -1,8 +1,18 @@
 import { Link } from "react-router-dom";
+import React, { useState,useEffect } from "react";
 
 import "../css/Header.css";
 
 function Header({ isBoxVisible, setIsBoxVisible }) {
+  const [isLogin, setIsLogin] = useState(false)
+  useEffect(() => {
+    // 페이지 로드 시 로그인 상태 복원
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLogin(true);
+    }
+  }, []);
+
   const handleLogout = () => {
     fetch("/logout", {
       method: "POST",
@@ -10,6 +20,8 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
       .then((response) => {
         if (response.ok) {
           // 로그아웃 성공
+          localStorage.removeItem("token");
+          setIsLogin(false);
           alert("로그아웃 성공");
         } else {
           // 로그아웃 실패
@@ -20,6 +32,7 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
         console.log(error);
       });
   };
+
   const handleClick = () => {
     setIsBoxVisible(!isBoxVisible);
   };
@@ -50,17 +63,20 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
       <div className="tab-top-right">
         <div className="tab-text-img-layout">
           <div className="top-right-text-layout">
-            <Link to="/myPage">
-              {" "}
-              {/* 여기서 경로를 "/myPage"로 수정 */}
-              <span className="top-right-text">마이페이지</span>
-            </Link>
-            <Link to="/login">
-              <span className="top-right-text">로그인</span>
-            </Link>
-            <span className="top-right-text" onClick={handleLogout}>
-              로그아웃
-            </span>
+            {isLogin ? (
+            <div>
+              <Link to="/myPage">
+                <span className="top-right-text">마이페이지</span>
+              </Link>
+              <span className="top-right-text" onClick={handleLogout}>
+                로그아웃
+              </span>
+            </div>
+            ):(
+              <Link to="/login">
+                <span className="top-right-text">로그인</span>
+              </Link>
+            )}
           </div>
           <Link to="/shopping">
             <img src="/pizza.png" className="icon-pizza" alt="pizza" />
