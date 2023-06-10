@@ -53,8 +53,8 @@ app.post("/login", (req, res) => {
             id: user.id,
             pw: user.pw,
           };
-          res.cookie("userPk", user.pk)
-          
+          res.cookie("userPk", user.pk);
+
           res.json({ success: true, message: "인증에 성공했습니다" });
         } else {
           res.json({ success: false, message: "인증에 실패했습니다2" });
@@ -66,14 +66,13 @@ app.post("/login", (req, res) => {
 
 // 로그아웃 라우트
 app.post("/logout", (req, res) => {
-  
-    // const pk = req.session.user.pk // 이렇게 해서 가져올수있음
-    // console.log(pk)
-    
+  // const pk = req.session.user.pk // 이렇게 해서 가져올수있음
+  // console.log(pk)
+
   // 세션에서 사용자 정보를 삭제
-    req.session.destroy();
-    res.clearCookie("userPk");
-    res.json({ success: true });
+  req.session.destroy();
+  res.clearCookie("userPk");
+  res.json({ success: true });
   // res.redirect("/main")
 });
 
@@ -213,7 +212,9 @@ app.post("/shoppingCancel", (req, res) => {
               res.send(result);
             } else {
               console.error(err);
-              res.status(500).send("장바구니 항목 삭제 중 오류가 발생했습니다.");
+              res
+                .status(500)
+                .send("장바구니 항목 삭제 중 오류가 발생했습니다.");
             }
           }
         );
@@ -247,7 +248,9 @@ app.post("/changeCnt", (req, res) => {
               res.send(result);
             } else {
               console.error(err);
-              res.status(500).send("장바구니 항목 수정 중 오류가 발생했습니다.");
+              res
+                .status(500)
+                .send("장바구니 항목 수정 중 오류가 발생했습니다.");
             }
           }
         );
@@ -258,8 +261,6 @@ app.post("/changeCnt", (req, res) => {
     }
   );
 });
-
-
 
 //
 
@@ -278,7 +279,12 @@ app.post("/orderPizza", (req, res) => {
           (err, orderData) => {
             if (!err) {
               const orderPk = orderData.insertId;
-              const values = shoppingData.map(item => [orderPk, item.productPk, item.cnt, item.price]);
+              const values = shoppingData.map((item) => [
+                orderPk,
+                item.productPk,
+                item.cnt,
+                item.price,
+              ]);
               db.query(
                 "INSERT INTO order_product (orderPk, productPk, cnt, price) VALUES ?",
                 [values],
@@ -315,7 +321,6 @@ app.post("/orderPizza", (req, res) => {
     }
   );
 });
-
 
 //
 app.get("/reviewPizzaInfo/:pk", (req, res) => {
@@ -390,18 +395,18 @@ app.get("/sales", (req, res) => {
   const date = req.query.date;
   db.query(
     "SELECT CASE WHEN DAYOFWEEK(orderDate) = 1 THEN '일요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 2 THEN '월요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 3 THEN '화요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 4 THEN '수요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 5 THEN '목요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 6 THEN '금요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 7 THEN '토요일' " +
-    "END AS dayOfWeek, SUM(op.price * op.cnt) AS totalSales " +
-    "FROM `order` o JOIN `order_product` op ON o.pk = op.orderPk " +
-    "WHERE orderDate >= DATE_SUB(?, INTERVAL DAYOFWEEK(?) - 1 DAY) " +
-    "AND orderDate <= DATE_ADD(?, INTERVAL 7 - DAYOFWEEK(?) + 1 DAY) " +
-    "GROUP BY dayOfWeek " +
-    "ORDER BY DAYOFWEEK(orderDate);",
+      "WHEN DAYOFWEEK(orderDate) = 2 THEN '월요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 3 THEN '화요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 4 THEN '수요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 5 THEN '목요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 6 THEN '금요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 7 THEN '토요일' " +
+      "END AS dayOfWeek, SUM(op.price * op.cnt) AS totalSales " +
+      "FROM `order` o JOIN `order_product` op ON o.pk = op.orderPk " +
+      "WHERE orderDate >= DATE_SUB(?, INTERVAL DAYOFWEEK(?) - 1 DAY) " +
+      "AND orderDate <= DATE_ADD(?, INTERVAL 7 - DAYOFWEEK(?) + 1 DAY) " +
+      "GROUP BY dayOfWeek " +
+      "ORDER BY DAYOFWEEK(orderDate);",
     [date, date, date, date],
     (err, data) => {
       if (!err) {
@@ -413,12 +418,10 @@ app.get("/sales", (req, res) => {
     }
   );
 });
-  
-
 
 app.get("/purchaseHistory", (req, res) => {
   db.query(
-    "SELECT o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
+    "SELECT op.pk, o.orderDate, o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
       "JOIN order_product op ON o.pk = op.orderPk " +
       "JOIN product p ON op.productPk = p.pk " +
       "JOIN user u ON o.userPk = u.pk " +
@@ -434,14 +437,19 @@ app.get("/purchaseHistory", (req, res) => {
   );
 });
 
-app.get("/isReview", (req, res) => {
-  db.query("SELECT review FROM order_product WHERE pk = 1", (err, data) => {
-    if (!err) {
-      res.send(data);
-    } else {
-      console.log(err);
+app.get("/isReview/:pk", (req, res) => {
+  const order_product_pk = req.params.pk;
+  db.query(
+    "SELECT review FROM order_product WHERE pk = ?",
+    [order_product_pk],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+      } else {
+        console.log(err);
+      }
     }
-  });
+  );
 });
 
 app.post("/review", (req, res) => {

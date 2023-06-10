@@ -131,7 +131,7 @@ function MyPageInfo() {
             id="address"
             type="text"
             name="address"
-            value={myInfo.address}
+            value={address}
             onChange={handleAddressChange}
             readOnly={!isAddressEditing}
           ></input>
@@ -141,7 +141,7 @@ function MyPageInfo() {
           <input
             type="text"
             name="address_detail"
-            value={myInfo.addressDetail}
+            value={detailAddress}
             onChange={handleDetailAddressChange}
             readOnly={!isAddressEditing}
           ></input>
