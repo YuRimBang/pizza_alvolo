@@ -75,7 +75,8 @@ function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption}) {
         <div className="pizza_menu" key={index}>
           <div className="hiddenBox">
             <div className="detail">
-              <Link to="/reviewList">리뷰보기</Link></div>
+                리뷰보기</div>
+              {/* <Link to="/reviewList">리뷰보기</Link></div> */}
             <Link to="/shopping">
             <div onClick={() => addPizza(pizza)} className="min_shopping">장바구니</div>
             </Link>

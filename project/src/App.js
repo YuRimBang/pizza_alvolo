@@ -31,9 +31,9 @@ function App() {
           <Route path="/pizza" element={<Pizza />} />
           <Route path="/shopping" element={<Shopping />} />
           <Route path="/myPage" element={<MyPage />} />
-          <Route 
+          {/* <Route 
             path="/reviewList" 
-            element={<ReviewList reviewInfo={reviewHistory}/>} />
+            element={<ReviewList reviewInfo={reviewHistory}/>} /> */}
           <Route
             path="/purchasehistory"
             element={<PurchaseHistory orderInfo={purchaseHistory} />}
