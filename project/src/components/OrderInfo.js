@@ -11,7 +11,7 @@ function OrderInfo({ orderInfoEach }) {
   }, []);
 
   const isReview = async () => {
-    const result = await axios.get("/isReview");
+    const result = await axios.get(`/isReview/${orderInfoEach.pk}`);
     const userInfo = result.data[0];
     userInfo.review === 1
       ? setShowWriteButton(false)
@@ -26,11 +26,25 @@ function OrderInfo({ orderInfoEach }) {
     setShowWriteReview(false);
   };
 
+  const orderDate = new Date(orderInfoEach.orderDate);
+  const formattedDate = `${orderDate.getFullYear()}-${(orderDate.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${orderDate
+    .getDate()
+    .toString()
+    .padStart(2, "0")} ${orderDate
+    .getHours()
+    .toString()
+    .padStart(2, "0")}:${orderDate
+    .getMinutes()
+    .toString()
+    .padStart(2, "0")}:${orderDate.getSeconds().toString().padStart(2, "0")}`;
+
   return (
     <div className="order_info_list">
       <div className="order_info">
         <div className="info_name">주문일자</div>
-        <div className="info">{orderInfoEach.orderDate}</div>
+        <div className="info">{formattedDate}</div>
       </div>
       <div className="order_info">
         <div className="info_name">주문메뉴</div>
@@ -58,7 +72,10 @@ function OrderInfo({ orderInfoEach }) {
         )}
       </div>
       {showWriteReview && (
-        <WriteReview onRegisterButtonClick={handleRegisterButtonClick} />
+        <WriteReview
+          onRegisterButtonClick={handleRegisterButtonClick}
+          orderInfoEach={orderInfoEach}
+        />
       )}
     </div>
   );
