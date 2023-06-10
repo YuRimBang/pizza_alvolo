@@ -29,38 +29,56 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
     setTotalPrice(total);
   };
 
-  const handleQuantityChange = (item, index, operation) => {
-    const updatedData = basketData.map((basketItem, basketIndex) => {
-      if (basketIndex === index) {
-        if (operation === "increase") {
-          return { ...basketItem, cnt: basketItem.cnt + 1 };
-        } else if (operation === "decrease" && basketItem.cnt > 1) {
-          return { ...basketItem, cnt: basketItem.cnt - 1 };
-        }
+  const handleQuantityChange = async (item, index, operation) => {
+    try {
+      if (operation === "increase") {
+        const response = await axios.post("/changeCnt", {
+          userPk: 1,
+          menuName: item.menuName,
+          cnt: item.cnt + 1,
+        });
+        const updatedData = basketData.map((basketItem, basketIndex) => {
+          if (basketIndex === index) {
+            return { ...basketItem, cnt: basketItem.cnt + 1 };
+          }
+          return basketItem;
+        });
+        setBasketData(updatedData);
+        calculateTotalPrice(updatedData);
+      } else if (operation === "decrease" && item.cnt > 1) {
+        const response = await axios.post("/changeCnt", {
+          userPk: 1,
+          menuName: item.menuName,
+          cnt: item.cnt - 1,
+        });
+        const updatedData = basketData.map((basketItem, basketIndex) => {
+          if (basketIndex === index) {
+            return { ...basketItem, cnt: basketItem.cnt - 1 };
+          }
+          return basketItem;
+        });
+        setBasketData(updatedData);
+        calculateTotalPrice(updatedData);
       }
-      return basketItem;
-    });
-
-    setBasketData(updatedData);
-    calculateTotalPrice(updatedData);
+    } catch (error) {
+      console.error("장바구니 데이터를 불러오는데 실패했습니다:", error);
+    }
   };
 
   const cancelItem = async (item) => {
     try {
       await axios.post("/shoppingCancel", {
         userPk: 1,
-        pk: item.pk,
+        menuName : item.menuName
       });
-      const updatedData = basketData.filter(
-        (basketItem) => basketItem.pk !== item.pk
-      );
+      const updatedData = basketData.filter((basketItem) => basketItem !== item);
       setBasketData(updatedData);
       calculateTotalPrice(updatedData);
     } catch (error) {
       console.error("장바구니 삭제 실패했습니다:", error);
     }
   };
-
+  
   return (
     <div className="shoppingBasket">
       <ul className="shoppingPizza">
@@ -73,7 +91,7 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
             />
             <div className="shopping_pizza">
               <div className="shopping_pizza_name">{item.menuName}</div>
-              <div className="shopping_pizza_size">{`${item.size}, ${item.tag}`}</div>
+              <div className="shopping_pizza_size">{`${item.size}, 일반도우`}</div>
               <div className="shopping_option">옵션변경</div>
             </div>
             <div className="shopping_pizza_cnt">
@@ -89,37 +107,37 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
                 type="button"
                 value="+"
                 onClick={() => handleQuantityChange(item, index, "increase")}
-              />
-            </div>
-            <div className="shopping_pizza_menu_price">
-              <span className="shopping_pizza_menu_total_price">
-                {item.price * item.cnt}
-              </span>
-              <span className="shopping_menu_won">원</span>
-            </div>
-            <div className="shopping_change">
-              <div className="shopping_change_btn">변경저장</div>
-            </div>
-            <div className="shopping_cancle">
-              <input
-                onClick={() => cancelItem(item)}
-                className="shopping_cancle_btn"
-                type="button"
-                value="X"
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
-      <div className="total_main">
-        <span className="total_amount">합계</span>
-        <span className="total_sum">총</span>
-        <span className="total_price">{totalPrice}</span>
-        <span className="total_won">원</span>
+                />
+              </div>
+              <div className="shopping_pizza_menu_price">
+                <span className="shopping_pizza_menu_total_price">
+                  {item.price * item.cnt}
+                </span>
+                <span className="shopping_menu_won">원</span>
+              </div>
+              <div className="shopping_change">
+                <div className="shopping_change_btn">변경저장</div>
+              </div>
+              <div className="shopping_cancel">
+                <input
+                  onClick={() => cancelItem(item)}
+                  className="shopping_cancel_btn"
+                  type="button"
+                  value="X"
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+        <div className="total_main">
+          <span className="total_amount">합계</span>
+          <span className="total_sum">총</span>
+          <span className="total_price">{totalPrice}</span>
+          <span className="total_won">원</span>
+        </div>
       </div>
-    </div>
-  );
-}
-
-export default ShoppingBasket;
-
+    );
+  }
+  
+  export default ShoppingBasket;
+  
