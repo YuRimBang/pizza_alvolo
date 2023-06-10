@@ -1,11 +1,11 @@
 const express = require("express");
 const app = express();
-const multer = require('multer');
+const multer = require("multer");
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./config/db.js");
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require("http-proxy-middleware");
 
 // app.use(
 //   '/login',
@@ -15,22 +15,23 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 //   })
 // );
 
-const session = require('express-session');
-app.use(session({
-  secret: 'your-secret-key',
-  resave: false,
-  saveUninitialized: true
-}));
+const session = require("express-session");
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
-app.get('/', (req, res) => {
-  console.log('/root');
-  res.send('/root');
+app.get("/", (req, res) => {
+  console.log("/root");
+  res.send("/root");
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-
 
 // app.post("/login", (req, res) => {
 //   const id = req.body.id;
@@ -67,7 +68,9 @@ app.post("/login", (req, res) => {
     (err, rows) => {
       if (err) {
         console.log(err);
-        res.status(500).json({ success: false, message: "인증에 실패했습니다1" });
+        res
+          .status(500)
+          .json({ success: false, message: "인증에 실패했습니다1" });
       } else {
         if (rows.length > 0) {
           const user = rows[0];
@@ -77,7 +80,7 @@ app.post("/login", (req, res) => {
             id: user.id,
             pw: user.pw,
           };
-          res.json({ success: true,message: "인증에 성공했습니다"  });
+          res.json({ success: true, message: "인증에 성공했습니다" });
         } else {
           res.json({ success: false, message: "인증에 실패했습니다2" });
         }
@@ -161,7 +164,6 @@ app.post("/shoppingPizza", (req, res) => {
   );
 });
 
-
 app.get("/shopping", (req, res) => {
   const userPk = req.query.userPk;
 
@@ -211,7 +213,81 @@ app.get("/shopping", (req, res) => {
     }
   );
 });
-  
+
+app.post("/shoppingCancel", (req, res) => {
+  const pk = req.body.pk;
+  const userPk = req.body.userPk;
+
+  db.query(
+    "DELETE FROM shopping_basket WHERE pk = ? AND userPk = ?",
+    [pk, userPk],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+      } else {
+        console.log(err);
+        res.status(500).send("Error canceling shopping item");
+      }
+    }
+  );
+});
+
+app.post("/order", (req, res) => {
+  const userPk = req.body.userPk;
+
+  db.query(
+    "DELETE FROM shopping_basket WHERE userPk = ?",
+    [userPk],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+      } else {
+        console.log(err);
+        res.status(500).send("Error canceling shopping item");
+      }
+    }
+  );
+});
+
+//
+app.get("/reviewPizzaInfo/:pk", (req, res) => {
+  const pizzaPk = req.params.pk;
+  db.query(
+    "SELECT menuName, engName, size, price, image FROM product WHERE pk = ?;",
+    [pizzaPk],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+        console.log(data);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+
+app.get("/review/:pk", (req, res) => {
+  const pizzaPk = req.params.pk;
+
+  db.query(
+    "SELECT r.rate, r.content, u.name " +
+      "FROM review r " +
+      "JOIN order_product op ON r.orderProductPk = op.pk " +
+      "JOIN `order` o ON op.orderPk = o.pk " +
+      "JOIN user u ON o.userPk = u.pk " +
+      "WHERE op.productPk = ?;",
+    [pizzaPk],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+        console.log(data);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+
 app.get("/userInfo", (req, res) => {
   db.query("select * from user where pk = 1", (err, data) => {
     if (!err) {
@@ -220,71 +296,6 @@ app.get("/userInfo", (req, res) => {
       console.log(err);
     }
   });
-});
-
-app.post("/shoppingCancel", (req, res) => {
-  const pk = req.body.pk;
-  const userPk = req.body.userPk;
-
-  db.query("DELETE FROM shopping_basket WHERE pk = ? AND userPk = ?", [pk, userPk], (err, data) => {
-    if (!err) {
-      res.send(data);
-    } else {
-      console.log(err);
-      res.status(500).send("Error canceling shopping item");
-    }
-  });
-});
-
-app.post("/order", (req, res) => {
-  const userPk = req.body.userPk;
-
-  db.query("DELETE FROM shopping_basket WHERE userPk = ?", [userPk], (err, data) => {
-    if (!err) {
-      res.send(data);
-    } else {
-      console.log(err);
-      res.status(500).send("Error canceling shopping item");
-    }
-  });
-});
-
-
-app.get("/purchaseHistory", (req, res) => {
-  db.query(
-    "SELECT o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
-      "JOIN order_product op ON o.pk = op.orderPk " +
-      "JOIN product p ON op.productPk = p.pk " +
-      "JOIN user u ON o.userPk = u.pk " +
-      "JOIN store s ON o.storePk = s.pk " +
-      "WHERE u.pk = 1",
-    (err, data) => {
-      if (!err) {
-        res.send(data);
-      } else {
-        console.log(err);
-      }
-    }
-  );
-});
-
-app.post("/review", (req, res) => {
-  const orderProductPk = req.body.orderProductPk;
-  const content = req.body.content;
-  const rate = req.body.rate;
-  db.query(
-    "INSERT INTO review (orderProductPk, content, rate) values (?, ?, ?)",
-    [orderProductPk, content, rate],
-    function (err, rows, fields) {
-      if ((err, rows, fields)) {
-        if (err) {
-          console.log("실패");
-        } else {
-          console.log("성공");
-        }
-      }
-    }
-  );
 });
 
 app.post("/userInfo", (req, res) => {
@@ -307,7 +318,61 @@ app.post("/userInfo", (req, res) => {
   );
 });
 
+app.get("/purchaseHistory", (req, res) => {
+  db.query(
+    "SELECT o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
+      "JOIN order_product op ON o.pk = op.orderPk " +
+      "JOIN product p ON op.productPk = p.pk " +
+      "JOIN user u ON o.userPk = u.pk " +
+      "JOIN store s ON o.storePk = s.pk " +
+      "WHERE u.pk = 1",
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
 
+app.get("/isReview", (req, res) => {
+  db.query("SELECT review FROM order_product WHERE pk = 1", (err, data) => {
+    if (!err) {
+      res.send(data);
+    } else {
+      console.log(err);
+    }
+  });
+});
+
+app.post("/review", (req, res) => {
+  const orderProductPk = req.body.orderProductPk;
+  const content = req.body.content;
+  const rate = req.body.rate;
+  db.query(
+    "INSERT INTO review (orderProductPk, content, rate) VALUES (?, ?, ?)",
+    [orderProductPk, content, rate],
+    function (err, rows, fields) {
+      if (err) {
+        console.log("실패");
+      } else {
+        console.log("성공");
+        db.query(
+          "UPDATE order_product SET review = 1 WHERE pk = ?",
+          [orderProductPk],
+          function (err, rows, fields) {
+            if (err) {
+              console.log("업데이트 실패");
+            } else {
+              console.log("업데이트 성공");
+            }
+          }
+        );
+      }
+    }
+  );
+});
 
 app.listen(PORT, () => {
   console.log(`Server On : http://localhost:${PORT}`);

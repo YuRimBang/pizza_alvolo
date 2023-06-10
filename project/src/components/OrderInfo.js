@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/OrderInfo.css";
 import WriteReview from "./WriteReview";
-
+import axios from "axios";
 function OrderInfo({ orderInfoEach }) {
   const [showWriteReview, setShowWriteReview] = useState(false);
+  const [showWriteButton, setShowWriteButton] = useState(true);
+
+  useEffect(() => {
+    isReview();
+  }, []);
+
+  const isReview = async () => {
+    const result = await axios.get("/isReview");
+    const userInfo = result.data[0];
+    userInfo.review === 1
+      ? setShowWriteButton(false)
+      : setShowWriteButton(true);
+  };
 
   const handleReviewButtonClick = () => {
     setShowWriteReview(true);
@@ -36,11 +49,13 @@ function OrderInfo({ orderInfoEach }) {
       <div className="order_info">
         <div className="info_name">주문매장</div>
         <div className="info">{orderInfoEach.name}</div>
-        <div className="button_container">
-          <button className="review" onClick={handleReviewButtonClick}>
-            후기작성
-          </button>
-        </div>
+        {showWriteButton && (
+          <div className="button_container">
+            <button className="review" onClick={handleReviewButtonClick}>
+              후기작성
+            </button>
+          </div>
+        )}
       </div>
       {showWriteReview && (
         <WriteReview onRegisterButtonClick={handleRegisterButtonClick} />
