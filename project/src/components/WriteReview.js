@@ -1,10 +1,9 @@
 import "../css/WriteReview.css";
 import React, { useState } from "react";
 
-function WriteReview({ onRegisterButtonClick, orderInfoEach }) {
+function WriteReview({ onRegisterButtonClick }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [reviewInfo, setReviewInfo] = useState("");
-  const [isReviewEmpty, setIsReviewEmpty] = useState(true);
 
   const images = ["1", "2", "3", "4", "5"];
 
@@ -14,20 +13,17 @@ function WriteReview({ onRegisterButtonClick, orderInfoEach }) {
 
   const handleInputChange = (e) => {
     setReviewInfo(e.target.value);
-    setIsReviewEmpty(e.target.value.trim() === "");
   };
 
   const handleRegisterButton = () => {
-    if (!isReviewEmpty) {
-      submitReview();
-      onRegisterButtonClick();
-      alert("후기가 작성되었습니다.");
-    }
+    submitReview();
+    onRegisterButtonClick();
+    alert("후기가 작성되었습니다.");
   };
 
   const submitReview = () => {
     const post = {
-      orderProductPk: orderInfoEach.pk,
+      orderProductPk: 1,
       content: reviewInfo,
       rate: currentImageIndex + 1,
     };
@@ -56,14 +52,10 @@ function WriteReview({ onRegisterButtonClick, orderInfoEach }) {
         />
       </div>
       <div className="review_context">
-        <input value={reviewInfo} onChange={handleInputChange} required></input>
+        <input value={reviewInfo} onChange={handleInputChange}></input>
       </div>
       <div className="regist_button_container">
-        <button
-          className="regist_button"
-          onClick={handleRegisterButton}
-          disabled={isReviewEmpty}
-        >
+        <button className="regist_button" onClick={handleRegisterButton}>
           등록
         </button>
       </div>
