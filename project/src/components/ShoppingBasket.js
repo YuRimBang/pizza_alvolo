@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import "../css/ShoppingBasket.css";
 import axios from "axios";
 
-function ShoppingBasket() {
-  const [basketData, setBasketData] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
-
+function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }) {
   useEffect(() => {
     fetchBasketData();
   }, []);
@@ -73,7 +70,7 @@ function ShoppingBasket() {
               className="shopping_pizza_img"
               src={`/pizza_img/${item.menuPk}/${item.menuPk}-1.png`}
               alt="피자"
-            ></img>
+            />
             <div className="shopping_pizza">
               <div className="shopping_pizza_name">{item.menuName}</div>
               <div className="shopping_pizza_size">{`${item.size}, ${item.tag}`}</div>

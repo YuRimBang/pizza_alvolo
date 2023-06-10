@@ -79,9 +79,8 @@ app.post("/login", (req, res) => {
             pk: user.pk,
             id: user.id,
             pw: user.pw,
-            status: user.status,
           };
-          res.json({ success: true,message: "인증에 성공했습니다", pk: user.pk, status: user.status });
+          res.json({ success: true, message: "인증에 성공했습니다" });
         } else {
           res.json({ success: false, message: "인증에 실패했습니다2" });
         }
@@ -233,22 +232,61 @@ app.post("/shoppingCancel", (req, res) => {
   );
 });
 
-app.post("/order", (req, res) => {
+//
+
+app.post("/orderPizza", (req, res) => {
   const userPk = req.body.userPk;
+  const storePk = req.body.storePk;
 
   db.query(
-    "DELETE FROM shopping_basket WHERE userPk = ?",
+    "SELECT productPk, cnt, price FROM shopping_basket WHERE userPk = ?",
     [userPk],
-    (err, data) => {
-      if (!err) {
-        res.send(data);
+    (err, shoppingData) => {
+      if (shoppingData.length > 0) {
+        db.query(
+          "INSERT INTO `order` (userPk, storePk) VALUES (?, ?)",
+          [userPk, storePk],
+          (err, orderData) => {
+            if (!err) {
+              const orderPk = orderData.insertId;
+              const values = shoppingData.map(item => [orderPk, item.productPk, item.cnt, item.price]);
+              db.query(
+                "INSERT INTO order_product (orderPk, productPk, cnt, price) VALUES ?",
+                [values],
+                (err, order_productData) => {
+                  if (!err) {
+                    db.query(
+                      "DELETE FROM shopping_basket WHERE userPk = ?",
+                      [userPk],
+                      (err, result) => {
+                        if (!err) {
+                          res.send(result);
+                        } else {
+                          console.log(err);
+                          res.status(500).send("order_product 실패");
+                        }
+                      }
+                    );
+                  } else {
+                    console.log(err);
+                    res.status(500).send("order_product 실패");
+                  }
+                }
+              );
+            } else {
+              console.log(err);
+              res.status(500).send("order 실패");
+            }
+          }
+        );
       } else {
         console.log(err);
-        res.status(500).send("Error canceling shopping item");
+        res.status(500).send("select 실패");
       }
     }
   );
 });
+
 
 //
 app.get("/reviewPizzaInfo/:pk", (req, res) => {
