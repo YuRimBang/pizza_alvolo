@@ -1,0 +1,33 @@
+.review_item {
+  display: flex;
+  border-bottom: 1px solid gray;
+  padding: 15px;
+}
+
+.review_list .rate {
+  width: 250px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 5px;
+  text-align: center;
+}
+
+.rate img {
+  width: 120px;
+  height: auto;
+}
+
+.review_list .info {
+  width: 500px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 5px;
+}
+
+.review_list .writer {
+  width: 250px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 5px;
+  text-align: center;
+}

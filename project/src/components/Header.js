@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import "../css/Header.css"
+import "../css/Header.css";
 
 function Header({ isBoxVisible, setIsBoxVisible }) {
   const handleLogout = () => {
@@ -25,19 +25,18 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
   };
   return (
     <div className="web-main-tab-top">
-     
-        <div className="logo">
+      <div className="logo">
         <img
-          src="hamberger.png"
+          src="/hamberger.png"
           className="web-icon-menu"
           alt="menu"
           onClick={handleClick}
         />
-          <Link to="/">
-          <img src="logo.png" className="web-icon-logo" alt="logo" />
-          </Link>
-        </div>
-        <div className="tab-top-middle">
+        <Link to="/">
+          <img src="/logo.png" className="web-icon-logo" alt="logo" />
+        </Link>
+      </div>
+      <div className="tab-top-middle">
         <Link to="/pizza">
           <span className="top-middle-text">피자</span>
         </Link>
@@ -51,16 +50,20 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
       <div className="tab-top-right">
         <div className="tab-text-img-layout">
           <div className="top-right-text-layout">
-            <Link to="/myPage"> {/* 여기서 경로를 "/myPage"로 수정 */}
+            <Link to="/myPage">
+              {" "}
+              {/* 여기서 경로를 "/myPage"로 수정 */}
               <span className="top-right-text">마이페이지</span>
             </Link>
             <Link to="/login">
-            <span className="top-right-text">로그인</span>
+              <span className="top-right-text">로그인</span>
             </Link>
-            <span className="top-right-text"onClick={handleLogout}>로그아웃</span>
+            <span className="top-right-text" onClick={handleLogout}>
+              로그아웃
+            </span>
           </div>
           <Link to="/shopping">
-          <img src="pizza.png" className="icon-pizza" alt="pizza" />
+            <img src="/pizza.png" className="icon-pizza" alt="pizza" />
           </Link>
         </div>
       </div>

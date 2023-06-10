@@ -1,0 +1,80 @@
+.viewReview {
+  width: 1000px;
+  margin: 0 auto;
+}
+
+.pizza_info {
+  display: flex;
+  margin: 50px 0;
+  border: 1px solid black;
+}
+
+.pizza_detail_info {
+  width: 500px;
+  margin: 20px 0;
+}
+
+.pizza_name {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.pizza_engName {
+  font-size: 14px;
+  color: gray;
+  text-align: center;
+  margin: 10px 0;
+}
+
+.pizza_image img {
+  width: 500px;
+  height: auto;
+}
+
+.pizza_price_info {
+  text-align: center;
+}
+
+.pizza_price_info .pizza_size {
+  color: rgb(16, 176, 204);
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.pizza_price_info .pizza_price {
+  margin: 0 5px;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.pizza_review_col {
+  display: flex;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+  padding: 15px;
+}
+
+.pizza_review_col .rate {
+  width: 250px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 5px;
+  text-align: center;
+}
+
+.pizza_review_col .info {
+  width: 500px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 5px;
+  text-align: center;
+}
+
+.pizza_review_col .writer {
+  width: 250px;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 5px;
+  text-align: center;
+}
