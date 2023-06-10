@@ -8,7 +8,7 @@ import MyPage from "./MyPage";
 import Login from "./Login";
 import PurchaseHistory from "./PurchaseHistory";
 import axios from "axios";
-import ReviewList from "./components/ReviewList";
+import ViewReview from "./ViewReview";
 
 function App() {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
@@ -31,7 +31,7 @@ function App() {
           <Route path="/pizza" element={<Pizza />} />
           <Route path="/shopping" element={<Shopping />} />
           <Route path="/myPage" element={<MyPage />} />
-          <Route path="/review" element={<ViewReview />} />
+          <Route path="/review/:pizzaPk" element={<ViewReview />} />
           <Route
             path="/purchasehistory"
             element={<PurchaseHistory orderInfo={purchaseHistory} />}

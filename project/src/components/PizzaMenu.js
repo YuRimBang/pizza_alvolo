@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "../css/PizzaMenu.css";
 import Page from "./Page";
 
-function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption}) {
+function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption }) {
   const [pizzaData, setPizzaData] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
   const pageSize = 2;
@@ -34,7 +34,7 @@ function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption}) {
       const response = await axios.get("/pizza", {
         params: {
           category: category,
-          op: selectedOption
+          op: selectedOption,
         },
       });
 
@@ -58,12 +58,12 @@ function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption}) {
         userPk: 1,
         menuPk: pizza.pk,
         price: pizza.price,
-        cnt: 1
+        cnt: 1,
       },
     });
 
     alert(response.data);
-  };  
+  };
 
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
@@ -74,11 +74,13 @@ function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption}) {
       {displayedPizzaData.map((pizza, index) => (
         <div className="pizza_menu" key={index}>
           <div className="hiddenBox">
-            <div className="detail">
-                리뷰보기</div>
-              {/* <Link to="/reviewList">리뷰보기</Link></div> */}
+            <Link to={`/review/${pizza.pk}`}>
+              <div className="detail">리뷰보기</div>
+            </Link>
             <Link to="/shopping">
-            <div onClick={() => addPizza(pizza)} className="min_shopping">장바구니</div>
+              <div onClick={() => addPizza(pizza)} className="min_shopping">
+                장바구니
+              </div>
             </Link>
           </div>
           <div className="img"></div>

@@ -24,6 +24,7 @@ function OrderInfo({ orderInfoEach }) {
 
   const handleRegisterButtonClick = () => {
     setShowWriteReview(false);
+    setShowWriteButton(false);
   };
 
   const orderDate = new Date(orderInfoEach.orderDate);
