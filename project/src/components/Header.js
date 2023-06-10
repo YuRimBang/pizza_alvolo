@@ -54,7 +54,6 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
             <Link to="/myPage"> {/* 여기서 경로를 "/myPage"로 수정 */}
               <span className="top-right-text">마이페이지</span>
             </Link>
-            <span className="top-right-text">회원가입</span>
             <Link to="/login">
             <span className="top-right-text">로그인</span>
             </Link>
