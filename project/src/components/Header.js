@@ -1,13 +1,22 @@
 import { Link } from "react-router-dom";
-import "../css/Header.css";
-import React from "react";
 
-function Header() {
+import "../css/Header.css"
+
+function Header({ isBoxVisible, setIsBoxVisible }) {
+
+  const handleClick = () => {
+    setIsBoxVisible(!isBoxVisible);
+  };
   return (
     <div className="web-main-tab-top">
      
         <div className="logo">
-          <img src="hamberger.png" className="web-icon-menu" alt="menu" />
+        <img
+          src="hamberger.png"
+          className="web-icon-menu"
+          alt="menu"
+          onClick={handleClick}
+        />
           <Link to="/">
           <img src="logo.png" className="web-icon-logo" alt="logo" />
           </Link>
@@ -26,7 +35,7 @@ function Header() {
       <div className="tab-top-right">
         <div className="tab-text-img-layout">
           <div className="top-right-text-layout">
-            <Link to="/myPage">
+            <Link to="/myPage"> {/* 여기서 경로를 "/myPage"로 수정 */}
               <span className="top-right-text">마이페이지</span>
             </Link>
             <span className="top-right-text">회원가입</span>

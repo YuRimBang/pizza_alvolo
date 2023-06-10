@@ -1,16 +1,21 @@
+import { Link } from "react-router-dom";
 import '../css/MainUnder.css';
 
-function MainUnder() {
-    
+function MainUnder({ isBoxVisible, setIsBoxVisible }) {
+    const handleClick = () => {
+        setIsBoxVisible(false);
+      };
     return (
-        <div className='box'>
+        <div className={isBoxVisible ? 'box show' : 'box'}>
             <div className='bunch'>
                 <div className='boxes'>
                     <div className='blackFont'>
                         피자
                     </div>
                     <div className='whiteFont'>
+                        <Link to="/pizza">
                         <div class="tab-item">전체피자</div>
+                        </Link>
                         <div class="tab-item">스페셜반반피자</div>
                         <div class="tab-item">세트메뉴</div>
                         <div class="tab-item">하프엔하프</div>
@@ -55,11 +60,15 @@ function MainUnder() {
                         마이페이지
                     </div>
                     <div className='whiteFont'>
+                        <Link to="/purchasehistory">
                         <div class="tab-item">주문내역</div>
+                        </Link>
                         <div class="tab-item">쿠폰함</div>
                         <div class="tab-item">MY CLASS</div>
                         <div class="tab-item">비행기스탬프</div>
+                        <Link to="/myPage">
                         <div class="tab-item">정보수정</div>
+                        </Link>
                         <div class="tab-item">회원탈퇴</div>
                     </div>
                 </div>
@@ -79,7 +88,7 @@ function MainUnder() {
             <div className='bottomText'>
                 <p>회사소개&gt;   가맹문의&gt;   고객센터&gt;   단체주문&gt;</p>
             </div>
-            <img src="hamCross.png" class="icon-x"></img>
+            <img src="hamCross.png" class="icon-x" onClick={handleClick}></img>
         </div>
 
     );
