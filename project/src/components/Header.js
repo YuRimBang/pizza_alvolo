@@ -3,23 +3,7 @@ import { Link } from "react-router-dom";
 import "../css/Header.css"
 
 function Header({ isBoxVisible, setIsBoxVisible }) {
-  const handleLogout = () => {
-    fetch("/logout", {
-      method: "POST",
-    })
-      .then((response) => {
-        if (response.ok) {
-          // 로그아웃 성공
-          alert("로그아웃 성공");
-        } else {
-          // 로그아웃 실패
-          alert("로그아웃 실패");
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+
   const handleClick = () => {
     setIsBoxVisible(!isBoxVisible);
   };
@@ -58,7 +42,7 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
             <Link to="/login">
             <span className="top-right-text">로그인</span>
             </Link>
-            <span className="top-right-text"onClick={handleLogout}>로그아웃</span>
+            <span className="top-right-text">로그아웃</span>
           </div>
           <Link to="/shopping">
           <img src="pizza.png" className="icon-pizza" alt="pizza" />

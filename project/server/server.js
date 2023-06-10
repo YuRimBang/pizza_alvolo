@@ -6,7 +6,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./config/db.js");
 const { createProxyMiddleware } = require("http-proxy-middleware");
-const session = require("express-session");
+
 // app.use(
 //   '/login',
 //   createProxyMiddleware({
@@ -14,8 +14,8 @@ const session = require("express-session");
 //     changeOrigin: true,
 //   })
 // );
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+
+const session = require("express-session");
 app.use(
   session({
     secret: "your-secret-key",
@@ -33,6 +33,33 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
+// app.post("/login", (req, res) => {
+//   const id = req.body.id;
+//   const pw = req.body.pw;
+//   db.query(
+//     "SELECT * FROM user WHERE id = ? AND pw = ?",
+//     [id, pw],
+//     (err, rows) => {
+//       if (err) {
+//         console.log(err);
+//         res.status(500).json({ success: false, message: "인증에 실패했습니다" });
+//       } else {
+//         if (rows.length > 0) {
+//           const user = rows[0];
+//           // 인증에 성공한 경우 세션에 사용자 정보 저장
+//           req.session.user = {
+//             pk: user.pk,
+//             id: user.id,
+//             pw: user.pw,
+//           };
+//           res.json({ success: true });
+//         } else {
+//           res.json({ success: false, message: "인증에 실패했습니다" });
+//         }
+//       }
+//     }
+//   );
+// });
 app.post("/login", (req, res) => {
   const { id, pw } = req.body;
   db.query(
@@ -53,8 +80,6 @@ app.post("/login", (req, res) => {
             id: user.id,
             pw: user.pw,
           };
-          res.cookie("userPk", user.pk)
-          
           res.json({ success: true, message: "인증에 성공했습니다" });
         } else {
           res.json({ success: false, message: "인증에 실패했습니다2" });
@@ -66,15 +91,10 @@ app.post("/login", (req, res) => {
 
 // 로그아웃 라우트
 app.post("/logout", (req, res) => {
-  
-    // const pk = req.session.user.pk // 이렇게 해서 가져올수있음
-    // console.log(pk)
-    
   // 세션에서 사용자 정보를 삭제
-    req.session.destroy();
-    res.clearCookie("userPk");
-    res.json({ success: true });
-  // res.redirect("/main")
+  req.session.destroy();
+
+  res.json({ success: true });
 });
 
 app.get("/pizza", (req, res) => {
