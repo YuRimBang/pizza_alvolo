@@ -357,6 +357,36 @@ app.post("/userInfo", (req, res) => {
   );
 });
 
+app.get("/sales", (req, res) => {
+  const date = req.query.date;
+  db.query(
+    "SELECT CASE WHEN DAYOFWEEK(orderDate) = 1 THEN '일요일' " +
+    "WHEN DAYOFWEEK(orderDate) = 2 THEN '월요일' " +
+    "WHEN DAYOFWEEK(orderDate) = 3 THEN '화요일' " +
+    "WHEN DAYOFWEEK(orderDate) = 4 THEN '수요일' " +
+    "WHEN DAYOFWEEK(orderDate) = 5 THEN '목요일' " +
+    "WHEN DAYOFWEEK(orderDate) = 6 THEN '금요일' " +
+    "WHEN DAYOFWEEK(orderDate) = 7 THEN '토요일' " +
+    "END AS dayOfWeek, SUM(op.price * op.cnt) AS totalSales " +
+    "FROM `order` o JOIN `order_product` op ON o.pk = op.orderPk " +
+    "WHERE orderDate >= DATE_SUB(?, INTERVAL DAYOFWEEK(?) - 1 DAY) " +
+    "AND orderDate <= DATE_ADD(?, INTERVAL 7 - DAYOFWEEK(?) + 1 DAY) " +
+    "GROUP BY dayOfWeek " +
+    "ORDER BY DAYOFWEEK(orderDate);",
+    [date, date, date, date],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+        console.log(data);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+  
+
+
 app.get("/purchaseHistory", (req, res) => {
   db.query(
     "SELECT o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +

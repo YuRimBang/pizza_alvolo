@@ -4,10 +4,10 @@ import Chart from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
 
-
 const ChartComponent = () => {
   const labels = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
   const [data, setData] = useState(null);
+  const [inputDate, setInputDate] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -15,13 +15,17 @@ const ChartComponent = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/sales");
+      const response = await axios.get("/sales", { params: { date: inputDate } }); 
       setData(response.data);
     } catch (error) {
       console.error("Error fetching sales data:", error);
     }
   };
-  
+
+  const handleDateChange = (e) => {
+    setInputDate(e.target.value); // Update the input date state
+  };
+
   const chartData = {
     labels: labels,
     datasets: [
@@ -49,7 +53,9 @@ const ChartComponent = () => {
   };
 
   return (
-   <div className="chart-container">
+    <div className="chart-container">
+      <input type="date" value={inputDate} onChange={handleDateChange} /> 
+      <button onClick={fetchData}>Get Sales</button> 
       <Bar data={chartData} options={options} />
     </div>
   );
