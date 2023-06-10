@@ -405,8 +405,19 @@ app.get("/purchaseHistory", (req, res) => {
   );
 });
 
-app.get("/isReview", (req, res) => {
-  db.query("SELECT review FROM order_product WHERE pk = 1", (err, data) => {
+// app.get("/isReview", (req, res) => {
+//   db.query("SELECT review FROM order_product WHERE pk = 1", (err, data) => {
+//     if (!err) {
+//       res.send(data);
+//     } else {
+//       console.log(err);
+//     }
+//   });
+// });
+app.get("/isReview/:pk", (req, res) => {
+  const pk = req.params.pk;
+  db.query("SELECT review FROM order_product WHERE pk = ?", 
+  [pk], (err, data) => {
     if (!err) {
       res.send(data);
     } else {
@@ -414,6 +425,7 @@ app.get("/isReview", (req, res) => {
     }
   });
 });
+
 
 app.post("/review", (req, res) => {
   const orderProductPk = req.body.orderProductPk;
