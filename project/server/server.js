@@ -76,8 +76,9 @@ app.post("/login", (req, res) => {
             pk: user.pk,
             id: user.id,
             pw: user.pw,
+            status: user.status,
           };
-          res.json({ success: true,message: "인증에 성공했습니다"  });
+          res.json({ success: true,message: "인증에 성공했습니다", pk: user.pk, status: user.status });
         } else {
           res.json({ success: false, message: "인증에 실패했습니다2" });
         }
