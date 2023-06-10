@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import '../css/MenuRegistration.css';
 import axios from 'axios';
 
-
 function MenuRegistration() {
 
   const [inputs, setInputs] = useState({
@@ -35,7 +34,6 @@ function MenuRegistration() {
       [name]: value,
     })
   }
-
 
   const submitMenu = () => {
 

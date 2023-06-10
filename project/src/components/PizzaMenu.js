@@ -74,7 +74,8 @@ function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption}) {
       {displayedPizzaData.map((pizza, index) => (
         <div className="pizza_menu" key={index}>
           <div className="hiddenBox">
-            <div className="detail">리뷰보기</div>
+            <div className="detail">
+              <Link to="/reviewList">리뷰보기</Link></div>
             <Link to="/shopping">
             <div onClick={() => addPizza(pizza)} className="min_shopping">장바구니</div>
             </Link>

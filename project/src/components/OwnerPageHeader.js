@@ -5,12 +5,12 @@ function OwnerPageHeader() {
   return (
     <Router>
       <div className="ownerpage">
-        <div className="mypage_header">
-            <div className="mypage_header_title">
+        <div className="ownerpage_header">
+            <div className="ownerpage_header_title">
                 마이페이지
             </div>
         </div>
-        <div className="mypage_menutab">
+        <div className="ownerpage_menutab">
             <NavLink to="/registMenu">
             <div className="menutab_page_title">
                 <h5 className="tab">
