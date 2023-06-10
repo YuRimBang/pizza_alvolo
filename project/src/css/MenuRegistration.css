@@ -1,44 +1,122 @@
 * {
-    margin: 0;
-    padding: 0;
-  }
+  margin: 0;
+  padding: 0;
+}
 
-  label {
-    margin-right: 15px;
-  }
-  
-  .form-group {
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
+.menu_register_content_input input[type="text"],
+.menu_register_content_input input[type="checkbox"] {
+width: 100%;
+height: 40px;
+font-size: 18px;
+}
 
-  input[name="description"],
-  input[name="allergy"],
-  input[name="origin"] {
-    width: 500px;
-  }
-    
-    /*버튼*/
-  .edit_container_button {
-    display: flex;
-    margin-top: 70px;
-  }
-  
-  .edit_container_button > div {
-    width: 50%;
-    height: 64px;
-    font-size: 22px;
-    font-weight: bold;
-    color: white;
-    text-align: center;
-    line-height: 64px;
-  }
-  
-  .edit_container_button .gray_button {
-    background-color: #CCCCCC;
-    margin-right: 20px;
-  }
-  
-  .edit_container_button .blue_button {
-    background-color: #41B6E6;
-  }
+.menu_register_content_input {
+display: flex;
+align-items: center;
+border-bottom: 1px solid rgb(207, 207, 207);
+width: 100%;
+height: 60px;
+padding: 5px 10px;
+margin-bottom: 40px;
+}
+
+.menu_register_content_input label {
+margin-right: 15px;
+font-size: 18px;
+}
+
+.menu_register_content form {
+margin-top: 50px;
+}
+
+
+label {
+margin-right: 15px;
+}
+
+.menu_register {
+width: 1200px;
+margin: 0 auto;
+text-align: center;
+}
+
+.menu_register_input {
+width: 100%; 
+}
+
+.form-group {
+margin-top: 50px;
+margin-bottom: 50px;
+}
+
+.menu_register .menu_register_title {
+padding: 50px 0 20px 0;
+border-bottom: 1px solid gray;
+}
+
+.menu_register .menu_register_title .menu_register_title_text {
+font-weight: bold;
+font-size: 22px;
+}
+
+.menu_register_content {
+padding: 100px 120px;
+}
+
+
+.menu_register_content_input {
+display: flex;
+border-bottom: 1px solid rgb(207, 207, 207);
+width: 100%;
+height: 40px;
+padding: 5px 10px;
+margin-bottom: 40px;
+align-items: center;
+}
+
+.menu_register_content_input input {
+border: none;
+font-size: 16px;
+outline: none;
+}
+
+.menu_register_content_input span {
+height: 35px;
+background-color: rgb(199, 199, 199);
+color: white;
+text-align: center;
+line-height: 35px;
+}
+.menu_register_content_input span {
+width: 150px;
+}
+
+/* 사진*/
+.form-group {
+margin-top: 100px;
+}
+
+/*버튼*/
+.edit_container_button {
+display: flex;
+margin-top: 70px;
+}
+
+.edit_container_button > div {
+width: 50%;
+height: 64px;
+font-size: 22px;
+font-weight: bold;
+color: white;
+text-align: center;
+line-height: 64px;
+}
+
+.edit_container_button .gray_button {
+background-color: #CCCCCC;
+margin-right: 20px;
+}
+
+.edit_container_button .blue_button {
+background-color: #41B6E6;
+}

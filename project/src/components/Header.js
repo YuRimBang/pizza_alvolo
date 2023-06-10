@@ -35,7 +35,7 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
       <div className="tab-top-right">
         <div className="tab-text-img-layout">
           <div className="top-right-text-layout">
-            <Link to="/myPage"> {/* 여기서 경로를 "/myPage"로 수정 */}
+            <Link to="/myPage"> 
               <span className="top-right-text">마이페이지</span>
             </Link>
             <span className="top-right-text">회원가입</span>

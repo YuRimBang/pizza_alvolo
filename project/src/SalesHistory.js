@@ -3,8 +3,10 @@ import SalesInfo from "./components/SalesInfo";
 import "./css/OwnerPage.css";
 import ChartComponent from "./components/ChartComponent"; 
 
+
 function SalesHistory({ salesInfo }) {
   return (
+    
     <div className="sales_info">
       <div className="sales_info_title">
         <div className="sales_info_title_text">
@@ -17,7 +19,12 @@ function SalesHistory({ salesInfo }) {
       <div className="chart-container"> 
         <ChartComponent />
       </div>
+
+
     </div>
+
+    
+
   );
   
 }

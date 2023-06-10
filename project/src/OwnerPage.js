@@ -28,7 +28,7 @@ function OwnerPage() {
         <OwnerPageHeader />
         <Router>
           <Routes>
-            <Route path="/ownerPage" element={<MenuRegistration />} />
+            <Route path="/" element={<MenuRegistration />} />
             <Route 
             path="/SalesHistory" 
             element={<SalesHistory salesInfo={salesHistory} />} />
