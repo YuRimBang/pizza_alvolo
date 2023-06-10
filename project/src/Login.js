@@ -1,7 +1,33 @@
 import "./css/Login.css";
 import Header from "./components/Header";
+import React, { useState } from "react";
 
 function Login() {
+  const [id, setId] = useState("");
+  const [pw, setPw] = useState("");
+
+  const handleLogin = () => {
+    const formData = {
+      id: id,
+      pw: pw,
+    };
+    console.log(formData);
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data); // 로그인 응답 데이터 확인
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div>
       <Header></Header>
@@ -13,9 +39,19 @@ function Login() {
             <span className="login_ment_blue">로그인</span>
             <span className="login_ment">을 해주세요 :)</span>
           </div>
-          <input className="id"></input>
-          <input className="pw"></input>
-          <div className="login_btn">로그인</div>
+          <input
+            className="id"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+          ></input>
+          <input
+            className="pw"
+            value={pw}
+            onChange={(e) => setPw(e.target.value)}
+          ></input>
+          <div className="login_btn" onClick={handleLogin}>
+            로그인
+          </div>
         </div>
       </div>
     </div>

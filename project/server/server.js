@@ -7,13 +7,20 @@ const bodyParser = require("body-parser");
 const db = require("./config/db.js");
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
-app.use(
-  '/shoppingBasket',
-  createProxyMiddleware({
-    target: 'http://localhost:4000',
-    changeOrigin: true,
-  })
-);
+// app.use(
+//   '/login',
+//   createProxyMiddleware({
+//     target: 'http://localhost:4000',
+//     changeOrigin: true,
+//   })
+// );
+
+const session = require('express-session');
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true
+}));
 
 app.get('/', (req, res) => {
   console.log('/root');
@@ -23,6 +30,69 @@ app.get('/', (req, res) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
+
+
+// app.post("/login", (req, res) => {
+//   const id = req.body.id;
+//   const pw = req.body.pw;
+//   db.query(
+//     "SELECT * FROM user WHERE id = ? AND pw = ?",
+//     [id, pw],
+//     (err, rows) => {
+//       if (err) {
+//         console.log(err);
+//         res.status(500).json({ success: false, message: "인증에 실패했습니다" });
+//       } else {
+//         if (rows.length > 0) {
+//           const user = rows[0];
+//           // 인증에 성공한 경우 세션에 사용자 정보 저장
+//           req.session.user = {
+//             pk: user.pk,
+//             id: user.id,
+//             pw: user.pw,
+//           };
+//           res.json({ success: true });
+//         } else {
+//           res.json({ success: false, message: "인증에 실패했습니다" });
+//         }
+//       }
+//     }
+//   );
+// });
+app.post("/login", (req, res) => {
+  const { id, pw } = req.body;
+  db.query(
+    "SELECT * FROM user WHERE id = ? AND pw = ?",
+    [id, pw],
+    (err, rows) => {
+      if (err) {
+        console.log(err);
+        res.status(500).json({ success: false, message: "인증에 실패했습니다1" });
+      } else {
+        if (rows.length > 0) {
+          const user = rows[0];
+          // // 인증에 성공한 경우 세션에 사용자 정보 저장
+          req.session.user = {
+            pk: user.pk,
+            id: user.id,
+            pw: user.pw,
+          };
+          res.json({ success: true,message: "인증에 성공했습니다"  });
+        } else {
+          res.json({ success: false, message: "인증에 실패했습니다2" });
+        }
+      }
+    }
+  );
+});
+
+// 로그아웃 라우트
+app.post("/logout", (req, res) => {
+  // 세션에서 사용자 정보를 삭제
+  req.session.destroy();
+
+  res.json({ success: true });
+});
 
 app.get("/pizza", (req, res) => {
   console.log("/pizza");
@@ -236,6 +306,8 @@ app.post("/userInfo", (req, res) => {
     }
   );
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server On : http://localhost:${PORT}`);
