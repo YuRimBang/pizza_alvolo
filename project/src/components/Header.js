@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState,useEffect } from "react";
 import axios from "axios";
 
 import "../css/Header.css";
 
 function Header({ isBoxVisible, setIsBoxVisible }) {
+  const navigator = useNavigate()
   const [isLogin, setIsLogin] = useState(false)
   const [status, setStatus] = useState("/")
 
@@ -26,7 +27,7 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
           localStorage.removeItem("token");
           setIsLogin(false);
           alert("로그아웃 성공");
-          window.location.href = "/"
+          navigator("/")
         } else {
           // 로그아웃 실패
           alert("로그아웃 실패");
