@@ -7,6 +7,18 @@ const bodyParser = require("body-parser");
 const db = require("./config/db.js");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const session = require("express-session");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 // app.use(
 //   session({
 //     secret: "your-secret-key",
@@ -16,6 +28,7 @@ const session = require("express-session");
 // );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 app.use(
   session({
     secret: "your-secret-key",
@@ -24,9 +37,10 @@ app.use(
   })
 );
 
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(bodyParser.json());
-// app.use(cors());
+app.get("/", (req, res) => {
+  console.log("/root");
+  res.send("/root");
+});
 
 app.post("/login", (req, res) => {
   const { id, pw } = req.body;
@@ -336,7 +350,8 @@ app.get("/review/:pk", (req, res) => {
 });
 
 app.get("/userInfo", (req, res) => {
-  db.query("select * from user where pk = 1", (err, data) => {
+  const pk = req.session.user.pk;
+  db.query("select * from user where pk = ?", [pk], (err, data) => {
     if (!err) {
       res.send(data);
     } else {
@@ -346,13 +361,15 @@ app.get("/userInfo", (req, res) => {
 });
 
 app.get("/purchaseHistory", (req, res) => {
+  const pk = req.session.user.pk;
   db.query(
     "SELECT o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
       "JOIN order_product op ON o.pk = op.orderPk " +
       "JOIN product p ON op.productPk = p.pk " +
       "JOIN user u ON o.userPk = u.pk " +
       "JOIN store s ON o.storePk = s.pk " +
-      "WHERE u.pk = 1",
+      "WHERE u.pk = ?",
+    [pk],
     (err, data) => {
       if (!err) {
         res.send(data);
@@ -436,21 +453,31 @@ app.get("/SalesHistory", (req, res) => {
 //차트
 app.get('/sales', (req, res) => {
   db.query(
-    "SELECT CASE WHEN DAYOFWEEK(orderDate) = 1 THEN '일요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 2 THEN '월요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 3 THEN '화요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 4 THEN '수요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 5 THEN '목요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 6 THEN '금요일' " +
-    "WHEN DAYOFWEEK(orderDate) = 7 THEN '토요일' " +
-    "END AS dayOfWeek, " +
-    "SUM(op.price * op.cnt) AS totalSales " +
-    "FROM `order` o JOIN `order_product` op ON o.pk = op.orderPk " +
-    "GROUP BY dayOfWeek ORDER BY DAYOFWEEK(orderDate);",
-      (err, data) => {
+    "SELECT op.pk, o.orderDate, o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
+      "JOIN order_product op ON o.pk = op.orderPk " +
+      "JOIN product p ON op.productPk = p.pk " +
+      "JOIN user u ON o.userPk = u.pk " +
+      "JOIN store s ON o.storePk = s.pk " +
+      "WHERE u.pk = ?",
+    [pk],
+    (err, data) => {
       if (!err) {
         res.send(data);
-        console.log(data);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+
+app.get("/isReview/:pk", (req, res) => {
+  const order_product_pk = req.params.pk;
+  db.query(
+    "SELECT review FROM order_product WHERE pk = ?",
+    [order_product_pk],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
       } else {
         console.log(err);
       }
@@ -486,7 +513,6 @@ app.post("/review", (req, res) => {
   );
 });
 
-
-app.listen(PORT, ()=>{
-    console.log(`Server On : http://localhost:${PORT}`);
-})
+app.listen(PORT, () => {
+  console.log(`Server On : http://localhost:${PORT}`);
+});
