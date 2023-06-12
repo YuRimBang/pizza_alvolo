@@ -4,6 +4,7 @@ import ReviewList from "./components/ReviewList";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+
 function ViewReview() {
   const [reviewPizzaInfo, setReviewPizzaInfo] = useState({});
   const [review, setReview] = useState([]);
@@ -35,14 +36,16 @@ function ViewReview() {
       console.error("리뷰를 가져오는데 실패했습니다:", error);
     }
   };
-
   return (
     <div>
       <Header></Header>
       <div className="viewReview">
         <div className="pizza_info">
           <div className="pizza_image">
-            <img src={`/pizza_img/1/1-1.png`} alt="Pizza Image" />
+          <img
+            src={`http://localhost:4000/${reviewPizzaInfo.image}`}
+            alt="Pizza Image"
+          />
           </div>
           <div className="pizza_detail_info">
             <div className="pizza_name">{reviewPizzaInfo.menuName}</div>
