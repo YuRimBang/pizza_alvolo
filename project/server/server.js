@@ -438,13 +438,15 @@ app.post("/review", (req, res) => {
 //----------------------
 
 // 메뉴 등록
-app.post('/menuRegistration', upload.single('file'),  (req, res) => {
+app.post('/menuRegistration', upload.single('file'), (req, res) => {
   const file = req.file;
   const imagePath = file.path; // 업로드된 파일의 경로
 
-  console.log('menuReigstration');
+  console.log('menuRegistration');
 
   const storePk = JSON.parse(req.body.menuData).storePk;
+  console.log(storePk);
+
   const menuName = JSON.parse(req.body.menuData).menuName;
   const menuName_eng = JSON.parse(req.body.menuData).menuName_eng;
   const category = JSON.parse(req.body.menuData).category;
@@ -454,21 +456,52 @@ app.post('/menuRegistration', upload.single('file'),  (req, res) => {
   const size = JSON.parse(req.body.menuData).size;
   const price = JSON.parse(req.body.menuData).price;
 
-
   db.query(
     "INSERT INTO product (storePk, menuName, engName, category, description, tag, ingredient, size, price, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [storePk, menuName, menuName_eng, category, description, tag, ingredient, size, price, imagePath],
     function (err, rows, fields) {
-      if ((err, rows, fields)) {
-        if (err) {
-          console.log("실패");
-        } else {
-          console.log("성공");
-        }
+      if (err) {
+        console.log("실패");
+      } else {
+        console.log("성공");
       }
     }
   );
 });
+// app.post('/menuRegistration', upload.single('file'),  (req, res) => {
+//   const file = req.file;
+//   const imagePath = file.path; // 업로드된 파일의 경로
+//   const userPk = req.session.user.pk;
+
+//   console.log('menuReigstration');
+
+//   const menuName = JSON.parse(req.body.menuData).menuName;
+//   const menuName_eng = JSON.parse(req.body.menuData).menuName_eng;
+//   const category = JSON.parse(req.body.menuData).category;
+//   const description = JSON.parse(req.body.menuData).description;
+//   const tag = JSON.parse(req.body.menuData).tag;
+//   const ingredient = JSON.parse(req.body.menuData).ingredient;
+//   const size = JSON.parse(req.body.menuData).size;
+//   const price = JSON.parse(req.body.menuData).price;
+
+//   db.query(
+//     "INSERT INTO product (storePk, menuName, engName, category, description, tag, ingredient, size, price, image) " + 
+//     "SELECT storePk, ?, ?, ?, ?, ?, ?, ?, ?, ? " +
+//     "FROM store WHERE ownerPk = ?",
+//     [menuName, menuName_eng, category, description, tag, ingredient, size, price, imagePath, userPk],
+//     function (err, rows, fields) {
+//       if ((err, rows, fields)) {
+//         if (err) {
+//           console.log("실패");
+//         } else {
+//           console.log("성공");
+//         }
+//       }
+//     }
+//   );
+// });
+
+
 
 // 판매 수량 확인
 app.get("/SalesHistory", (req, res) => {

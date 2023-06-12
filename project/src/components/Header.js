@@ -26,6 +26,7 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
           localStorage.removeItem("token");
           setIsLogin(false);
           alert("로그아웃 성공");
+          window.location.href = "/"
         } else {
           // 로그아웃 실패
           alert("로그아웃 실패");
