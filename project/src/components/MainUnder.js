@@ -13,7 +13,7 @@ function MainUnder({ isBoxVisible, setIsBoxVisible }) {
                         피자
                     </div>
                     <div className='whiteFont'>
-                        <Link to="/pizza"style={{ color: 'white' }}>
+                        <Link to="/pizza">
                         <div class="tab-item">전체피자</div>
                         </Link>
                         <div class="tab-item">스페셜반반피자</div>
@@ -60,13 +60,13 @@ function MainUnder({ isBoxVisible, setIsBoxVisible }) {
                         마이페이지
                     </div>
                     <div className='whiteFont'>
-                        <Link to="/purchasehistory"style={{ color: 'white' }}>
+                        <Link to="/purchasehistory">
                         <div class="tab-item">주문내역</div>
                         </Link>
                         <div class="tab-item">쿠폰함</div>
                         <div class="tab-item">MY CLASS</div>
                         <div class="tab-item">비행기스탬프</div>
-                        <Link to="/myPage"style={{ color: 'white' }}>
+                        <Link to="/myPage">
                         <div class="tab-item">정보수정</div>
                         </Link>
                         <div class="tab-item">회원탈퇴</div>
