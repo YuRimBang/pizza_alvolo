@@ -4,7 +4,6 @@ import PizzaTitle from './components/PizzaTitle';
 import PizzaTapMenu from './components/PizzaTapMenu';
 import PizzaSelectKategoire from './components/PizzaSelectKategoire';
 import PizzaMenu from './components/PizzaMenu';
-import Page from './components/Page';
 
 function Pizza() {
   const [activeTab, setActiveTab] = useState(0);
@@ -24,7 +23,7 @@ function Pizza() {
       <Header />
       <PizzaTitle />
       <PizzaTapMenu activeTab={activeTab}  setActiveTab={setActiveTab} setCurrentPage={setCurrentPage} />
-      {activeTab === 0 && <PizzaSelectKategoire activeTab={activeTab} onOptionChange={handleOptionChange} />}
+      {activeTab === 0 && <PizzaSelectKategoire activeTab={activeTab} onOptionChange={handleOptionChange} selectedOption={selectedOption} setSelectedOption={setSelectedOption} />}
       <PizzaMenu activeTab={activeTab} currentPage={currentPage} onPageChange={handlePageChange} selectedOption={selectedOption} />
     </div>
   );

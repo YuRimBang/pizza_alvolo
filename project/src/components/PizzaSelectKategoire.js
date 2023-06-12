@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 
-function PizzaSelectKategoire({ activeTab, onOptionChange }) {
-  const [selectedOption, setSelectedOption] = useState();
-
+function PizzaSelectKategoire({ activeTab, onOptionChange, selectedOption, setSelectedOption }) {
   const handleOptionChange = (event) => {
     const optionValue = event.target.value;
     setSelectedOption(optionValue);
