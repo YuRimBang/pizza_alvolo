@@ -5,7 +5,7 @@ import { Bar } from "react-chartjs-2";
 import axios from "axios";
 
 const ChartComponent = () => {
-  const labels = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+  const labels = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
   const [data, setData] = useState(null);
   const [inputDate, setInputDate] = useState("");
 
@@ -15,15 +15,28 @@ const ChartComponent = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/sales", { params: { date: inputDate } }); 
+      const response = await axios.get("/sales", { params: { date: inputDate } });
       setData(response.data);
+  
+      // 데이터 받아온 후에 dayOfWeek와 labels를 비교하여 데이터를 정렬
+      const sortedData = [];
+      for (const label of labels) {
+        const item = response.data.find((dataItem) => dataItem.dayOfWeek === label);
+        if (item) {
+          sortedData.push(item);
+        } else {
+          sortedData.push({ dayOfWeek: label, totalSales: 0 });
+        }
+      }
+      setData(sortedData);
     } catch (error) {
       console.error("Error fetching sales data:", error);
     }
   };
+  
 
   const handleDateChange = (e) => {
-    setInputDate(e.target.value); // Update the input date state
+    setInputDate(e.target.value);
   };
 
   const chartData = {
@@ -46,7 +59,7 @@ const ChartComponent = () => {
       },
     ],
   };
-
+  
   const options = {
     responsive: true,
     maintainAspectRatio: false,

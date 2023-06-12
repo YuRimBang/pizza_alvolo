@@ -582,11 +582,25 @@ app.get("/SalesHistory", (req, res) => {
 
 //차트
 app.get("/sales", (req, res) => {
-  const date = req.query.date;
   const pk = req.session.user.pk;
+  const orderDate = req.query.date;
+  console.log("현날짜:", orderDate);
+
+  const currentDayOfWeek = new Date(orderDate).getDay(); // 일요일부터 토요일까지 0~6
+
+  const difference = currentDayOfWeek === 0 ? 6 : currentDayOfWeek - 1; // 현재 요일과 월요일 사이의 차이 계산
+
+  console.log("cureentDayOfWeek", currentDayOfWeek);
+  const startDate = new Date(orderDate);
+  startDate.setDate(startDate.getDate() - difference ); // 현재 요일의 주의 월요일 날짜 계산
+  console.log(startDate);
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + 7); // 현재 요일의 주의 일요일 날짜 계산
+  console.log(endDate);
 
   db.query(
-    "SELECT CASE WHEN DAYOFWEEK(orderDate) = 1 THEN '일요일' " +
+    "SELECT CASE " +
+      "WHEN DAYOFWEEK(orderDate) = 1 THEN '일요일' " +
       "WHEN DAYOFWEEK(orderDate) = 2 THEN '월요일' " +
       "WHEN DAYOFWEEK(orderDate) = 3 THEN '화요일' " +
       "WHEN DAYOFWEEK(orderDate) = 4 THEN '수요일' " +
@@ -594,12 +608,15 @@ app.get("/sales", (req, res) => {
       "WHEN DAYOFWEEK(orderDate) = 6 THEN '금요일' " +
       "WHEN DAYOFWEEK(orderDate) = 7 THEN '토요일' " +
       "END AS dayOfWeek, SUM(op.price * op.cnt) AS totalSales " +
-      "FROM `order` o JOIN `order_product` op ON o.pk = op.orderPk JOIN `store` s ON o.storePk = s.pk " +
-      "WHERE s.ownerPk = ? AND orderDate >= DATE_SUB(? , INTERVAL DAYOFWEEK(?) - 1 DAY) " +
-      "AND orderDate <= DATE_ADD(? , INTERVAL 7 - DAYOFWEEK(?) + 1 DAY) " +
-      "GROUP BY dayOfWeek " +
+      "FROM `order` o " +
+      "JOIN `order_product` op ON o.pk = op.orderPk " +
+      "JOIN `store` s ON o.storePk = s.pk " +
+      "WHERE s.ownerPk = ? " +
+      "AND orderDate >= ? " +
+      "AND orderDate <= ? " +
+      "GROUP BY DAYOFWEEK(orderDate) " +
       "ORDER BY DAYOFWEEK(orderDate);",
-    [pk, date, date, date, date],
+    [pk, startDate, endDate],
     (err, data) => {
       if (!err) {
         res.send(data);
