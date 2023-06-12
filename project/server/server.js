@@ -80,7 +80,6 @@ app.post("/logout", (req, res) => {
   req.session.destroy();
   res.clearCookie("userPk");
   res.json({ success: true });
-  // res.redirect("/main")
 });
 
 
