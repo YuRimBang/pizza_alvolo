@@ -319,7 +319,7 @@ app.post("/orderPizza", (req, res) => {
                 orderPk,
                 item.productPk,
                 item.cnt,
-                item.price,
+                (item.price * item.cnt),
               ]);
               db.query(
                 "INSERT INTO order_product (orderPk, productPk, cnt, price) VALUES ?",
