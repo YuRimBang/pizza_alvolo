@@ -1,10 +1,12 @@
 import "./css/Login.css";
 import Header from "./components/Header";
 import React, { useState } from "react";
+import MainUnder from './components/MainUnder';
 
 function Login() {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
+  const [isBoxVisible, setIsBoxVisible] = useState(false);
 
   const handleLogin = () => {
     const formData = {
@@ -34,7 +36,8 @@ function Login() {
 
   return (
     <div>
-      <Header></Header>
+      <Header isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></Header>
+      <MainUnder isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></MainUnder>
       <div className="login_container">
         <div className="login_header">로그인</div>
         <div className="login">

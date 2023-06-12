@@ -23,16 +23,25 @@ function App() {
   }, []);
 
   const selectPurchaseHistory = async () => {
-    const result = await axios.get("/purchaseHistory");
-    const purchaseHistory = result.data;
-    setPurchaseHistory(purchaseHistory);
+    try {
+      const result = await axios.get("/purchaseHistory");
+      const purchaseHistory = result.data;
+      setPurchaseHistory(purchaseHistory);
+    } catch (error) {
+      console.log(error);
+    }
   };
-
+  
   const selectSalesHistory = async () => {
-    const result = await axios.get("/SalesHistory");
-    const salesHistory = result.data;
-    setSalesHistory(salesHistory);
-  }
+    try {
+      const result = await axios.get("/SalesHistory");
+      const salesHistory = result.data;
+      setSalesHistory(salesHistory);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 
   return (
     <BrowserRouter>
