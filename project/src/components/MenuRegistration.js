@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import '../css/MenuRegistration.css';
-
+import Header from "./Header";
+import MainUnder from './MainUnder';
+import OwnerPageHeader from "./OwnerPageHeader";
 function MenuRegistration() {
+  const [isBoxVisible, setIsBoxVisible] = useState(false);
 
   const [inputs, setInputs] = useState({
     menuName: "",
@@ -155,6 +158,11 @@ function MenuRegistration() {
   
 
   return (
+    <div>
+       <Header isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></Header>
+      <MainUnder isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></MainUnder>
+      <OwnerPageHeader />
+
     <div className="menu_register">
 
       <div className="menu_register_title">
@@ -222,7 +230,7 @@ function MenuRegistration() {
     </div>
 
   </div>      
-
+</div>
   );
 }
 
