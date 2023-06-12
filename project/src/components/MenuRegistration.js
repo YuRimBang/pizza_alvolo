@@ -4,6 +4,7 @@ import Header from "./Header";
 import OwnerPageHeader from "./OwnerPageHeader";
 
 function MenuRegistration() {
+  const [isBoxVisible, setIsBoxVisible] = useState(false);
 
   const [inputs, setInputs] = useState({
     menuName: "",
@@ -158,7 +159,8 @@ function MenuRegistration() {
 
   return (
     <div>
-      <Header />
+       <Header isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></Header>
+      <MainUnder isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></MainUnder>
       <OwnerPageHeader />
 
     <div className="menu_register">
@@ -228,8 +230,7 @@ function MenuRegistration() {
     </div>
 
   </div>      
-  </div>
-
+</div>
   );
 }
 
