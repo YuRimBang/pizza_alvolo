@@ -194,18 +194,18 @@ function MenuRegistration() {
           <div className="menu_register_content_input">
               <label>사이즈: &nbsp;</label>
               <label>
-                <input type="checkbox" name="P" checked={inputs.P} onChange={handleCheckboxChange} />
-                P <input type="text" name="P_price" placeholder="가격"  value={P_price} onChange={onChange}/>
+                P<input type="checkbox" name="P" checked={inputs.P} onChange={handleCheckboxChange} />
+                <input type="text" name="P_price" placeholder="가격"  value={P_price} onChange={onChange}/>
                 원
               </label>
               <label>
-                <input type="checkbox" name="R" checked={inputs.R} onChange={handleCheckboxChange} />
-                R <input type="text" name="R_price" placeholder="가격" value={R_price} onChange={onChange}/>
+                R<input type="checkbox" name="R" checked={inputs.R} onChange={handleCheckboxChange} />
+                <input type="text" name="R_price" placeholder="가격" value={R_price} onChange={onChange}/>
                 원
               </label>
               <label>
-                <input type="checkbox" name="L" checked={inputs.L} onChange={handleCheckboxChange}/>
-                L <input type="text" name="L_price" placeholder="가격" value={L_price} onChange={onChange}/>
+                L<input type="checkbox" name="L" checked={inputs.L} onChange={handleCheckboxChange}/>
+                <input type="text" name="L_price" placeholder="가격" value={L_price} onChange={onChange}/>
                 원
             </label>
           </div>

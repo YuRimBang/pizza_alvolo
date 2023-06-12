@@ -1,38 +1,44 @@
 * {
     margin: 0;
     padding: 0;
-  }
-  
+}
 
-.menu_register_content_input input[type="text"],
-.menu_register_content_input input[type="checkbox"] {
-  width: 100%;
+.menu_register_content_input label input[type="checkbox"] {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 30px;
   height: 40px;
   font-size: 18px;
 }
 
+.menu_register_content_input label input[type="text"] {
+  width: 100px;
+}
+
 .menu_register_content_input {
   display: flex;
-  align-items: center;
   border-bottom: 1px solid rgb(207, 207, 207);
   width: 100%;
-  height: 60px;
+  height: 40px;
   padding: 5px 10px;
   margin-bottom: 40px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .menu_register_content_input label {
-  margin-right: 15px;
+  display: flex;
   font-size: 18px;
+  align-items: center;
+}
+
+.menu_register_content_input label span {
+  font-size: 14px;
+  margin-left: 2px;
 }
 
 .menu_register_content form {
   margin-top: 50px;
-}
-
-
-label {
-  margin-right: 15px;
 }
 
 .menu_register {
@@ -64,17 +70,6 @@ label {
   padding: 100px 120px;
 }
 
-
-.menu_register_content_input {
-  display: flex;
-  border-bottom: 1px solid rgb(207, 207, 207);
-  width: 100%;
-  height: 40px;
-  padding: 5px 10px;
-  margin-bottom: 40px;
-  align-items: center;
-}
-
 .menu_register_content_input input {
   border: none;
   font-size: 16px;
@@ -82,15 +77,14 @@ label {
 }
 
 .menu_register_content_input span {
+  width: 150px;
   height: 35px;
   background-color: rgb(199, 199, 199);
   color: white;
   text-align: center;
   line-height: 35px;
 }
-.menu_register_content_input span {
-  width: 150px;
-}
+
 
 /* 사진*/
 .form-group {
@@ -121,3 +115,5 @@ label {
 .edit_container_button .blue_button {
   background-color: #41B6E6;
 }
+
+
