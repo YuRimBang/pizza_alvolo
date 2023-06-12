@@ -7,7 +7,6 @@ function ShoppingOrder({ setBasketData, setTotalPrice }) {
   const orderBtn = async () => {
     try {
       const response = await axios.post("/orderPizza", {
-        userPk: 1,
         storePk: 1
       });
 

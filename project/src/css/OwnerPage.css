@@ -2,16 +2,13 @@
   margin:0;
   padding:0;
 }
-.sales_info_content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.chart-container {
+  margin-top: 40px;
 }
 
 .sales_info {
+  width: 1200px;
+  margin: 0 auto;
   text-align: center;
-}
-
-canvas {
-  width: 600px;
 }

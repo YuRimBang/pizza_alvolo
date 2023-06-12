@@ -55,7 +55,6 @@ function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption }) {
   const addPizza = async (pizza) => {
     const response = await axios.post("/shoppingPizza", null, {
       params: {
-        userPk: 1,
         menuPk: pizza.pk,
         price: pizza.price,
         cnt: 1,

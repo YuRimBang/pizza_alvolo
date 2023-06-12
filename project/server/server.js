@@ -1,34 +1,14 @@
+
 const express = require("express");
 const app = express();
-const multer = require("multer");
+const multer = require('multer');
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const db = require("./config/db.js");
+// const upload = multer({ dest: 'uploads/' }); // 파일 업로드를 처리할 경로 설정
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const session = require("express-session");
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "_" + file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
-
-// app.use(
-//   session({
-//     secret: "your-secret-key",
-//     resave: false,
-//     saveUninitialized: true,
-//   })
-// );
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cors());
 app.use(
   session({
     secret: "your-secret-key",
@@ -37,10 +17,28 @@ app.use(
   })
 );
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '_' + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cors());
+
+
 app.get("/", (req, res) => {
   console.log("/root");
   res.send("/root");
 });
+
 
 app.post("/login", (req, res) => {
   const { id, pw } = req.body;
@@ -85,21 +83,64 @@ app.post("/logout", (req, res) => {
   // res.redirect("/main")
 });
 
-app.get("/product", (req, res) => {
-  console.log("/product");
-  db.query("select * from product", (err, data) => {
+
+app.get("/clickStatus", (req, res) => {
+  const pk = req.session.user.pk
+  console.log(pk)
+
+  db.query("Select * from user where pk = ?",[pk], (err, data) => {
     if (!err) {
-      // console.log(data)
+      console.log(data);
+      console.log(data[0].status);
+      if (data[0].status === "점주") {
+        res.send("/SalesHistory");
+      } else {
+        res.send("/myPage");
+      }
+    } else {
+      console.log(err);
+      res.status(500).send("Error");
+    }    
+  });
+});
+
+app.get("/pizza", (req, res) => {
+  console.log("/pizza");
+  let { activeTap, category, op } = req.query;
+  console.log(category);
+
+  let query = "SELECT * FROM product";
+
+  if (category === "장인") {
+    query += " WHERE category='장인'";
+  } else if (category === "달인") {
+    query += " WHERE category='달인'";
+  } else if (category === "명품") {
+    query += " WHERE category='명품'";
+  }
+
+  if (op === "lowPay") {
+    query += " ORDER BY price ASC";
+  } else if (op === "hiPay") {
+    query += " ORDER BY price DESC";
+  } else {
+    query += " ORDER BY launchDate DESC";
+  }
+
+  db.query(query, (err, data) => {
+    if (!err) {
       res.send(data);
       console.log(data);
     } else {
       console.log(err);
+      res.status(500).send("Error");
     }
   });
 });
 
 app.post("/shoppingPizza", (req, res) => {
-  const { userPk, menuPk, price, cnt } = req.query;
+  const userPk = req.session.user.pk;
+  const { menuPk, price, cnt } = req.query;
 
   db.query(
     "SELECT * FROM shopping_basket WHERE userPk = ? AND productPk = ?",
@@ -132,7 +173,7 @@ app.post("/shoppingPizza", (req, res) => {
 });
 
 app.get("/shopping", (req, res) => {
-  const userPk = req.query.userPk;
+  const userPk = req.session.user.pk;
 
   db.query(
     "SELECT * FROM shopping_basket WHERE userPk = ?",
@@ -182,69 +223,18 @@ app.get("/shopping", (req, res) => {
 });
 
 app.post("/shoppingCancel", (req, res) => {
-  const userPk = req.body.userPk;
-  const menuName = req.body.menuName;
+  const pk = req.body.pk;
+  const userPk = req.session.user.pk;
 
   db.query(
-    "SELECT * FROM product WHERE menuName = ?",
-    [menuName],
-    (err, result) => {
-      if (!err && result.length > 0) {
-        const productPk = result[0].pk; // assuming 'pk' is the column name for product primary key
-        db.query(
-          "DELETE FROM shopping_basket WHERE productPk = ? AND userPk = ?",
-          [productPk, userPk],
-          (err, result) => {
-            if (!err) {
-              console.log("삭제 성공");
-              res.send(result);
-            } else {
-              console.error(err);
-              res
-                .status(500)
-                .send("장바구니 항목 삭제 중 오류가 발생했습니다.");
-            }
-          }
-        );
+    "DELETE FROM shopping_basket WHERE pk = ? AND userPk = ?",
+    [pk, userPk],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
       } else {
-        console.error(err);
-        res.status(500).send("장바구니 항목 삭제 중 오류가 발생했습니다.");
-      }
-    }
-  );
-});
-
-//
-
-app.post("/changeCnt", (req, res) => {
-  const userPk = req.body.userPk;
-  const menuName = req.body.menuName;
-  const cnt = req.body.cnt;
-
-  db.query(
-    "SELECT * FROM product WHERE menuName = ?",
-    [menuName],
-    (err, result) => {
-      if (!err && result.length > 0) {
-        const productPk = result[0].pk; // assuming 'pk' is the column name for product primary key
-        db.query(
-          "UPDATE shopping_basket SET cnt = ? WHERE userPk = ? AND productPk = ?",
-          [cnt, userPk, productPk],
-          (err, result) => {
-            if (!err) {
-              console.log("수정 성공");
-              res.send(result);
-            } else {
-              console.error(err);
-              res
-                .status(500)
-                .send("장바구니 항목 수정 중 오류가 발생했습니다.");
-            }
-          }
-        );
-      } else {
-        console.error(err);
-        res.status(500).send("장바구니 항목 수정 중 오류가 발생했습니다.");
+        console.log(err);
+        res.status(500).send("Error canceling shopping item");
       }
     }
   );
@@ -253,7 +243,7 @@ app.post("/changeCnt", (req, res) => {
 //
 
 app.post("/orderPizza", (req, res) => {
-  const userPk = req.body.userPk;
+  const userPk = req.session.user.pk;
   const storePk = req.body.storePk;
 
   db.query(
@@ -349,6 +339,7 @@ app.get("/review/:pk", (req, res) => {
   );
 });
 
+//수정함
 app.get("/userInfo", (req, res) => {
   const pk = req.session.user.pk;
   db.query("select * from user where pk = ?", [pk], (err, data) => {
@@ -360,98 +351,28 @@ app.get("/userInfo", (req, res) => {
   });
 });
 
+app.post("/userInfo", (req, res) => {
+  const pk = req.body.pk;
+  const address = req.body.address;
+  const addressDetail = req.body.addressDetail;
+
+  db.query(
+    "UPDATE user SET address = ?, addressDetail = ? WHERE pk = ?",
+    [address, addressDetail, pk],
+    (err, rows, fields) => {
+      if (err) {
+        console.log("주소 업데이트 실패:", err);
+        res.json({ success: false });
+      } else {
+        console.log("주소 업데이트 성공");
+        res.json({ success: true });
+      }
+    }
+  );
+});
+
 app.get("/purchaseHistory", (req, res) => {
   const pk = req.session.user.pk;
-  db.query(
-    "SELECT o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
-      "JOIN order_product op ON o.pk = op.orderPk " +
-      "JOIN product p ON op.productPk = p.pk " +
-      "JOIN user u ON o.userPk = u.pk " +
-      "JOIN store s ON o.storePk = s.pk " +
-      "WHERE u.pk = ?",
-    [pk],
-    (err, data) => {
-      if (!err) {
-        res.send(data);
-      } else {
-        console.log(err);
-      }
-    }
-  );
-});
-
-app.post("/review", (req, res) => {
-  const orderProductPk = req.body.orderProductPk;
-  const content = req.body.content;
-  const rate = req.body.rate;
-  db.query(
-    "INSERT INTO review (orderProductPk, content, rate) values (?, ?, ?)",
-    [orderProductPk, content, rate],
-    function (err, rows, fields) {
-      if ((err, rows, fields)) {
-        if (err) {
-          console.log("실패");
-        } else {
-          console.log("성공");
-        }
-      }
-    }
-  );
-});
-
-// 메뉴 등록
-app.post('/menuRegistration', upload.single('file'),  (req, res) => {
-  const file = req.file;
-  const imagePath = file.path; // 업로드된 파일의 경로
-
-  console.log('menuReigstration');
-
-  const storePk = JSON.parse(req.body.menuData).storePk;
-  const menuName = JSON.parse(req.body.menuData).menuName;
-  const menuName_eng = JSON.parse(req.body.menuData).menuName_eng;
-  const category = JSON.parse(req.body.menuData).category;
-  const description = JSON.parse(req.body.menuData).description;
-  const tag = JSON.parse(req.body.menuData).tag;
-  const ingredient = JSON.parse(req.body.menuData).ingredient;
-  const size = JSON.parse(req.body.menuData).size;
-  const price = JSON.parse(req.body.menuData).price;
-
-
-  db.query(
-    "INSERT INTO product (storePk, menuName, engName, category, description, tag, ingredient, size, price, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [storePk, menuName, menuName_eng, category, description, tag, ingredient, size, price, imagePath],
-    function (err, rows, fields) {
-      if ((err, rows, fields)) {
-        if (err) {
-          console.log("실패");
-        } else {
-          console.log("성공");
-        }
-      }
-    }
-  );
-});
-
-// 판매 수량 확인
-app.get("/SalesHistory", (req, res) => {
-  db.query(
-    "SELECT p.menuName, SUM(op.cnt) AS cnt " +
-    "FROM product p " +
-    "JOIN order_product op ON p.pk = op.productPk " +
-    "GROUP BY p.menuName",
-      (err, data) => {
-      if (!err) {
-        res.send(data);
-        console.log(data);
-      } else {
-        console.log(err);
-      }
-    }
-  );
-});
-
-//차트
-app.get('/sales', (req, res) => {
   db.query(
     "SELECT op.pk, o.orderDate, o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
       "JOIN order_product op ON o.pk = op.orderPk " +
@@ -513,6 +434,95 @@ app.post("/review", (req, res) => {
   );
 });
 
-app.listen(PORT, () => {
-  console.log(`Server On : http://localhost:${PORT}`);
+
+//----------------------
+
+// 메뉴 등록
+app.post('/menuRegistration', upload.single('file'),  (req, res) => {
+  const file = req.file;
+  const imagePath = file.path; // 업로드된 파일의 경로
+
+  console.log('menuReigstration');
+
+  const storePk = JSON.parse(req.body.menuData).storePk;
+  const menuName = JSON.parse(req.body.menuData).menuName;
+  const menuName_eng = JSON.parse(req.body.menuData).menuName_eng;
+  const category = JSON.parse(req.body.menuData).category;
+  const description = JSON.parse(req.body.menuData).description;
+  const tag = JSON.parse(req.body.menuData).tag;
+  const ingredient = JSON.parse(req.body.menuData).ingredient;
+  const size = JSON.parse(req.body.menuData).size;
+  const price = JSON.parse(req.body.menuData).price;
+
+
+  db.query(
+    "INSERT INTO product (storePk, menuName, engName, category, description, tag, ingredient, size, price, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [storePk, menuName, menuName_eng, category, description, tag, ingredient, size, price, imagePath],
+    function (err, rows, fields) {
+      if ((err, rows, fields)) {
+        if (err) {
+          console.log("실패");
+        } else {
+          console.log("성공");
+        }
+      }
+    }
+  );
 });
+
+// 판매 수량 확인
+app.get("/SalesHistory", (req, res) => {
+  db.query(
+    "SELECT p.menuName, SUM(op.cnt) AS cnt " +
+    "FROM product p " +
+    "JOIN order_product op ON p.pk = op.productPk " +
+    "GROUP BY p.menuName",
+      (err, data) => {
+      if (!err) {
+        res.send(data);
+        console.log(data);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+
+//차트
+app.get("/sales", (req, res) => {
+  const date = req.query.date;
+  const pk = req.session.user.pk;
+
+  db.query(
+    "SELECT CASE WHEN DAYOFWEEK(orderDate) = 1 THEN '일요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 2 THEN '월요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 3 THEN '화요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 4 THEN '수요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 5 THEN '목요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 6 THEN '금요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 7 THEN '토요일' " +
+      "END AS dayOfWeek, SUM(op.price * op.cnt) AS totalSales " +
+      "FROM `order` o JOIN `order_product` op ON o.pk = op.orderPk JOIN `store` s ON o.storePk = s.pk " +
+      "WHERE s.ownerPk = ? AND orderDate >= DATE_SUB(? , INTERVAL DAYOFWEEK(?) - 1 DAY) " +
+      "AND orderDate <= DATE_ADD(? , INTERVAL 7 - DAYOFWEEK(?) + 1 DAY) " +
+      "GROUP BY dayOfWeek " +
+      "ORDER BY DAYOFWEEK(orderDate);",
+    [pk, date, date, date, date],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+        console.log(data);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+
+
+
+
+
+app.listen(PORT, ()=>{
+    console.log(`Server On : http://localhost:${PORT}`);
+})

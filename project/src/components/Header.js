@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import React, { useState,useEffect } from "react";
+import axios from "axios";
 
 import "../css/Header.css";
 
 function Header({ isBoxVisible, setIsBoxVisible }) {
   const [isLogin, setIsLogin] = useState(false)
+  const [status, setStatus] = useState("/")
+
   useEffect(() => {
     // 페이지 로드 시 로그인 상태 복원
     const token = localStorage.getItem("token");
@@ -23,7 +26,6 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
           localStorage.removeItem("token");
           setIsLogin(false);
           alert("로그아웃 성공");
-          window.location.href = "/"
         } else {
           // 로그아웃 실패
           alert("로그아웃 실패");
@@ -37,6 +39,22 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
   const handleClick = () => {
     setIsBoxVisible(!isBoxVisible);
   };
+
+  async function clickState(){
+    console.log("왔음")
+    try {
+      const response = await axios.get("/clickStatus");
+      
+      console.log(response.data)
+      setStatus(response.data);
+
+      window.location.href = response.data;
+
+    } catch (error) {
+      console.error("마이페이지 실패:", error);
+    }
+  };
+
   return (
     <div className="web-main-tab-top">
       <div className="logo">
@@ -66,9 +84,7 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
           <div className="top-right-text-layout">
             {isLogin ? (
             <div>
-              <Link to="/myPage">
-                <span className="top-right-text">마이페이지</span>
-              </Link>
+                <span onClick={clickState} className="top-right-text">마이페이지</span>
               <span className="top-right-text" onClick={handleLogout}>
                 로그아웃
               </span>

@@ -1,0 +1,85 @@
+*{
+    padding: 0;
+    margin: 0 auto;
+}
+
+.pizzaMenu{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 1200px;
+}
+
+.pizza_menu{
+    display: flex;
+    width: 580px;
+    height: 230px;
+    background-color: white;
+    margin: 30px 0px;
+}
+
+.menu1{
+    margin: 0;
+    height: 230px;
+}
+
+.menuexplan{
+    display:flex;
+    margin: 30px;
+    flex-direction: column;
+    width: 300px;
+}
+
+.name{
+    width: 300px;
+    font-size: 25px;
+    font-weight: 900;
+    margin-bottom: 5px;
+}
+
+.explan{
+    width: 300px;
+    margin-bottom: 5px;
+    color: lightslategrey;
+    margin-right: 10px;
+}
+
+.tag{
+    margin-right: 10px;
+}
+
+.size-price{
+    width: 300px;
+    margin-bottom: 5px;
+}
+
+.size{
+    font-size:25px;
+    font-weight: 700;
+    margin-right: 10px;
+    color: aqua;
+}
+
+.price{
+    font-size:25px;
+    font-weight: 700;
+    margin-right: 10px;
+}
+
+.material{
+    display: flex;
+    flex-wrap: wrap;
+    width: 300px;
+    margin-top: 30px;
+}
+
+.material1{
+    margin: 0px;
+    border: 1px solid lightslategrey;
+    width: 80px;
+    height: 30px;
+    border-radius: 40px;
+    text-align: center;
+    line-height: 30px;
+    margin-right: 10px;
+}

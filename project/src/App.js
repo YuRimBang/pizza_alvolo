@@ -9,12 +9,17 @@ import Login from "./Login";
 import PurchaseHistory from "./PurchaseHistory";
 import axios from "axios";
 import ViewReview from "./ViewReview";
+import OwnerPage from "./OwnerPage";
+import MenuRegistration from "./components/MenuRegistration";
+import SalesHistory from "./SalesHistory";
 
 function App() {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
+  const[salesHistory, setSalesHistory] = useState([]);
 
   useEffect(() => {
     selectPurchaseHistory();
+    selectSalesHistory();
   }, []);
 
   const selectPurchaseHistory = async () => {
@@ -22,6 +27,12 @@ function App() {
     const purchaseHistory = result.data;
     setPurchaseHistory(purchaseHistory);
   };
+
+  const selectSalesHistory = async () => {
+    const result = await axios.get("/SalesHistory");
+    const salesHistory = result.data;
+    setSalesHistory(salesHistory);
+  }
 
   return (
     <BrowserRouter>
@@ -37,6 +48,9 @@ function App() {
             element={<PurchaseHistory orderInfo={purchaseHistory} />}
           />
           <Route path="/login" element={<Login />} />
+          <Route path="/owner" element={<OwnerPage/>} />
+          <Route path="/ownerReg" element={<MenuRegistration/>} />
+          <Route path="/SalesHistory" element={<SalesHistory salesInfo={salesHistory}/>}/>
         </Routes>
       </div>
     </BrowserRouter>

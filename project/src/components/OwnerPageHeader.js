@@ -3,15 +3,14 @@ import { BrowserRouter as Router, NavLink } from "react-router-dom";
 
 function OwnerPageHeader() {
   return (
-    <Router>
       <div className="ownerpage">
-        <div className="mypage_header">
-            <div className="mypage_header_title">
+        <div className="ownerpage_header">
+            <div className="ownerpage_header_title">
                 마이페이지
             </div>
         </div>
-        <div className="mypage_menutab">
-            <NavLink to="/">
+        <div className="ownerpage_menutab">
+            <NavLink to="/ownerReg">
             <div className="menutab_page_title">
                 <h5 className="tab">
                 메뉴 등록
@@ -27,7 +26,6 @@ function OwnerPageHeader() {
         </NavLink>
       </div>
     </div>
-    </Router>
   );
 }
 

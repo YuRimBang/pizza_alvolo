@@ -9,11 +9,7 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
 
   const fetchBasketData = async () => {
     try {
-      const response = await axios.get("/shopping", {
-        params: {
-          userPk: 1,
-        },
-      });
+      const response = await axios.get("/shopping");
       setBasketData(response.data);
       calculateTotalPrice(response.data);
     } catch (error) {
@@ -33,7 +29,6 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
     try {
       if (operation === "increase") {
         const response = await axios.post("/changeCnt", {
-          userPk: 1,
           menuName: item.menuName,
           cnt: item.cnt + 1,
         });
@@ -47,7 +42,6 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
         calculateTotalPrice(updatedData);
       } else if (operation === "decrease" && item.cnt > 1) {
         const response = await axios.post("/changeCnt", {
-          userPk: 1,
           menuName: item.menuName,
           cnt: item.cnt - 1,
         });
@@ -68,7 +62,6 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
   const cancelItem = async (item) => {
     try {
       await axios.post("/shoppingCancel", {
-        userPk: 1,
         menuName : item.menuName
       });
       const updatedData = basketData.filter((basketItem) => basketItem !== item);
