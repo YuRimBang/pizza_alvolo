@@ -60,6 +60,7 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
   };
 
   const cancelItem = async (item) => {
+    console.log(item)
     try {
       await axios.post("/shoppingCancel", {
         menuName : item.menuName
@@ -79,7 +80,7 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
           <li className="shopping" key={index}>
             <img
               className="shopping_pizza_img"
-              src={`/pizza_img/${item.menuPk}/${item.menuPk}-1.png`}
+              src={`http://localhost:4000/${item.image}`}
               alt="피자"
             />
             <div className="shopping_pizza">
@@ -114,7 +115,7 @@ function ShoppingBasket({ basketData, setBasketData, totalPrice, setTotalPrice }
               <div className="shopping_cancel">
                 <input
                   onClick={() => cancelItem(item)}
-                  className="shopping_cancel_btn"
+                  className="shopping_cancle_btn"
                   type="button"
                   value="X"
                 />

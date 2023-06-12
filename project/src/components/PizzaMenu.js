@@ -2,21 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "../css/PizzaMenu.css";
-import Page from "./Page";
 
-function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption }) {
-  const [pizzaData, setPizzaData] = useState([]);
-  const [totalItems, setTotalItems] = useState(0);
-  const pageSize = 2;
-  const [totalPages, setTotalPages] = useState(0);
-
-  useEffect(() => {
+function PizzaMenu({ pizzaData, setPizzaData, totalItems, setTotalItems, pageSize, activeTab, currentPage, selectedOption, setTotalPages }) {
+useEffect(() => {
     fetchPizzaData();
-  }, [activeTab, currentPage, selectedOption]);
-
-  useEffect(() => {
     setTotalPages(Math.ceil(totalItems / pageSize));
-  }, [totalItems]);
+  }, [activeTab, currentPage, selectedOption]);
 
   const fetchPizzaData = async () => {
     try {
@@ -48,10 +39,6 @@ function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption }) {
     }
   };
 
-  const handlePageChange = (page) => {
-    onPageChange(page);
-  };
-
   const addPizza = async (pizza) => {
     const response = await axios.post("/shoppingPizza", null, {
       params: {
@@ -70,44 +57,48 @@ function PizzaMenu({ activeTab, currentPage, onPageChange, selectedOption }) {
 
   return (
     <div className="pizzaMenu">
-      {displayedPizzaData.map((pizza, index) => (
-        <div className="pizza_menu" key={index}>
-          <div className="hiddenBox">
-            <Link to={`/review/${pizza.pk}`}>
-              <div className="detail">리뷰보기</div>
-            </Link>
-            <Link to="/shopping">
-              <div onClick={() => addPizza(pizza)} className="min_shopping">
-                장바구니
+      {displayedPizzaData.map((pizza, index) => {
+        return (
+          <div className="pizza_menu" key={index}>
+            <div className="hiddenBox">
+              <Link to={`/review/${pizza.pk}`}>
+                <div className="detail">리뷰보기</div>
+              </Link>
+              <Link to="/shopping">
+                <div onClick={() => addPizza(pizza)} className="min_shopping">
+                  장바구니
+                </div>
+              </Link>
+            </div>
+            <div className="img">
+              <img
+                className="pizzaimg"
+                src={`http://localhost:4000/${pizza.image}`}
+                alt="피자 이미지"
+              ></img>
+            </div>
+            <div className="menuexplan">
+              <span className="name">{pizza.menuName}</span>
+              <span className="explan">{pizza.tag}</span>
+              <div className="size-price">
+                <span className="size">{pizza.size}</span>
+                <span className="price">{pizza.price}</span>
               </div>
-            </Link>
-          </div>
-          <div className="img"></div>
-          <div className="menuexplan">
-            <span className="name">{pizza.menuName}</span>
-            <span className="explan">{pizza.tag}</span>
-            <div className="size-price">
-              <span className="size">{pizza.size}</span>
-              <span className="price">{pizza.price}</span>
-            </div>
-            <div className="materialBox">
-              {pizza.ingredient &&
-                pizza.ingredient.split(" ").map((ingredient, index) => (
-                  <div className="material1" key={index}>
-                    {ingredient}
-                  </div>
-                ))}
+              <div className="materialBox">
+                {pizza.ingredient &&
+                  pizza.ingredient.split(" ").map((ingredient, index) => (
+                    <div className="material1" key={index}>
+                      {ingredient}
+                    </div>
+                  ))}
+              </div>
             </div>
           </div>
-        </div>
-      ))}
-      <Page
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+        );
+      })}
     </div>
   );
 }
 
 export default PizzaMenu;
+

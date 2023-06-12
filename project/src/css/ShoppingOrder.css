@@ -1,9 +1,11 @@
-*{
-    padding: 0;
-    margin: 0 auto;
+.orderbox{
+    justify-content: center;
+    align-items: center;
 }
 
 .total_order{
+    padding: 0;
+    margin: 0 auto;
     background-color: #41B6E6;
     color: white;
     width: 400px;
@@ -11,5 +13,4 @@
     text-align: center;
     line-height: 50px;
     font-weight: 900;
-    margin: 20px 0px 20px 950px;
 }

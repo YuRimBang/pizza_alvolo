@@ -1,15 +1,15 @@
-*{
-    padding: 0;
-    margin: 0 auto;
-}
-
 .kategoire{
+    margin-left: 900px;
     display: flex;
+    margin-top: 30px;
 }
 
 .option{
+    padding: 0;
+    margin: 0 auto;
     height: 50px;
     width: 300px;
+    border: 1px solid lightslategray;
     color: lightslategrey;
 }
 

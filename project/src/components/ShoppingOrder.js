@@ -20,9 +20,12 @@ function ShoppingOrder({ setBasketData, setTotalPrice }) {
   };
 
   return (
-    <div onClick={orderBtn} className="total_order">
-      주문하기
+    <div className='orderbox'>
+      <div onClick={orderBtn} className="total_order">
+        주문하기
+      </div>
     </div>
+
   );
 }
 

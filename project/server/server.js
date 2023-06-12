@@ -147,7 +147,7 @@ app.get("/pizza", (req, res) => {
 
 app.post("/shoppingPizza", (req, res) => {
   const userPk = req.session.user.pk;
-  const { menuPk, price, cnt } = req.query;
+  const {menuPk, price, cnt } = req.query;
 
   db.query(
     "SELECT * FROM shopping_basket WHERE userPk = ? AND productPk = ?",
@@ -208,6 +208,7 @@ app.get("/shopping", (req, res) => {
                     price: row.price,
                     cnt: row.cnt,
                     size: pizzaData.size,
+                    image: pizzaData.image
                   };
                   resolve(shoppingItem);
                 }
@@ -230,24 +231,74 @@ app.get("/shopping", (req, res) => {
 });
 
 app.post("/shoppingCancel", (req, res) => {
-  const pk = req.body.pk;
   const userPk = req.session.user.pk;
+  const menuName = req.body.menuName;
 
   db.query(
-    "DELETE FROM shopping_basket WHERE pk = ? AND userPk = ?",
-    [pk, userPk],
-    (err, data) => {
-      if (!err) {
-        res.send(data);
+    "SELECT * FROM product WHERE menuName = ?",
+    [menuName],
+    (err, result) => {
+      if (!err && result.length > 0) {
+        const productPk = result[0].pk; // assuming 'pk' is the column name for product primary key
+        db.query(
+          "DELETE FROM shopping_basket WHERE productPk = ? AND userPk = ?",
+          [productPk, userPk],
+          (err, result) => {
+            if (!err) {
+              console.log("삭제 성공");
+              res.send(result);
+            } else {
+              console.error(err);
+              res
+                .status(500)
+                .send("장바구니 항목 삭제 중 오류가 발생했습니다.");
+            }
+          }
+        );
       } else {
-        console.log(err);
-        res.status(500).send("Error canceling shopping item");
+        console.error(err);
+        res.status(500).send("장바구니 항목 삭제 중 오류가 발생했습니다.");
       }
     }
   );
 });
 
-//
+
+app.post("/changeCnt", (req, res) => {
+  const userPk = req.session.user.pk;
+  const menuName = req.body.menuName;
+  const cnt = req.body.cnt;
+
+  db.query(
+    "SELECT * FROM product WHERE menuName = ?",
+    [menuName],
+    (err, result) => {
+      if (!err && result.length > 0) {
+        const productPk = result[0].pk; // assuming 'pk' is the column name for product primary key
+        db.query(
+          "UPDATE shopping_basket SET cnt = ? WHERE userPk = ? AND productPk = ?",
+          [cnt, userPk, productPk],
+          (err, result) => {
+            if (!err) {
+              console.log("수정 성공");
+              res.send(result);
+            } else {
+              console.error(err);
+              res
+                .status(500)
+                .send("장바구니 항목 수정 중 오류가 발생했습니다.");
+            }
+          }
+        );
+      } else {
+        console.error(err);
+        res.status(500).send("장바구니 항목 수정 중 오류가 발생했습니다.");
+      }
+    }
+  );
+});
+
+
 
 app.post("/orderPizza", (req, res) => {
   const userPk = req.session.user.pk;
