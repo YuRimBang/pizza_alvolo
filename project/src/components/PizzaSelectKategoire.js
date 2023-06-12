@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 
-function PizzaSelectKategoire({ activeTab, onOptionChange, selectedOption, setSelectedOption }) {
+function PizzaSelectKategoire({
+  activeTab,
+  onOptionChange,
+  selectedOption,
+  setSelectedOption,
+}) {
   const handleOptionChange = (event) => {
     const optionValue = event.target.value;
     setSelectedOption(optionValue);
@@ -9,7 +14,11 @@ function PizzaSelectKategoire({ activeTab, onOptionChange, selectedOption, setSe
 
   return (
     <div className="kategoire">
-      <select className="option" value={selectedOption} onChange={handleOptionChange}>
+      <select
+        className="option"
+        value={selectedOption}
+        onChange={handleOptionChange}
+      >
         <option value="new" className="op">
           신상품순
         </option>
