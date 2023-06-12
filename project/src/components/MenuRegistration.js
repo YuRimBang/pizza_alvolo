@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import '../css/MenuRegistration.css';
 import Header from "./Header";
 import MainUnder from "./MainUnder";
@@ -6,6 +7,7 @@ import OwnerPageHeader from "./OwnerPageHeader";
 
 function MenuRegistration() {
   const [isBoxVisible, setIsBoxVisible] = useState(false);
+  const navigator = useNavigate()
 
   const [inputs, setInputs] = useState({
     menuName: "",
@@ -155,6 +157,8 @@ function MenuRegistration() {
   const handleConfirmation = () => {
     submitMenu();
     alert("메뉴가 등록되었습니다.");
+    navigator("/ownerReg");
+
   };
   
 
