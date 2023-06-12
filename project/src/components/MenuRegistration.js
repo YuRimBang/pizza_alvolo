@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import '../css/MenuRegistration.css';
 import Header from "./Header";
+import MainUnder from "./MainUnder";
 import OwnerPageHeader from "./OwnerPageHeader";
 
 function MenuRegistration() {
