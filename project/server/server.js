@@ -17,13 +17,6 @@ app.use(
   })
 );
 
-//파일 가져오기
-app.get('/uploads/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const imagePath = path.join(__dirname, 'uploads', filename);
-  res.sendFile(imagePath);
-});
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -358,8 +351,6 @@ app.get("/userInfo", (req, res) => {
   });
 });
 
-
-
 app.post("/userInfo", (req, res) => {
   const pk = req.body.pk;
   const address = req.body.address;
@@ -443,13 +434,13 @@ app.post("/review", (req, res) => {
   );
 });
 
+
 //----------------------
-const path = require('path');
 
 // 메뉴 등록
 app.post('/menuRegistration', upload.single('file'), (req, res) => {
   const file = req.file;
-  const imagePath = path.posix.join('uploads', file.filename); // 업로드된 파일의 경로
+  const imagePath = file.path; // 업로드된 파일의 경로
 
   console.log('menuRegistration');
 

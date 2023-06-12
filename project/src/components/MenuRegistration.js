@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import '../css/MenuRegistration.css';
-import Header from "./Header";
-import OwnerPageHeader from "./OwnerPageHeader";
 
 function MenuRegistration() {
 
@@ -157,10 +155,6 @@ function MenuRegistration() {
   
 
   return (
-    <div>
-      <Header />
-      <OwnerPageHeader />
-
     <div className="menu_register">
 
       <div className="menu_register_title">
@@ -228,7 +222,6 @@ function MenuRegistration() {
     </div>
 
   </div>      
-  </div>
 
   );
 }

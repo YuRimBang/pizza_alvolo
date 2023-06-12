@@ -86,14 +86,14 @@ function Header({ isBoxVisible, setIsBoxVisible }) {
           <div className="top-right-text-layout">
             {isLogin ? (
             <div>
-                <span onClick={clickState} className="top-right-text">마이페이지</span>
-              <span className="top-right-text" onClick={handleLogout}>
+                <span onClick={clickState} className="top-right-text"style={{ color: 'white' }}>마이페이지</span>
+              <span className="top-right-text" onClick={handleLogout}style={{ color: 'white' }}>
                 로그아웃
               </span>
             </div>
             ):(
               <Link to="/login">
-                <span className="top-right-text">로그인</span>
+                <span className="top-right-text"style={{ color: 'white' }}>로그인</span>
               </Link>
             )}
           </div>
