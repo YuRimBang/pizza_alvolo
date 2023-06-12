@@ -7,6 +7,18 @@ const bodyParser = require("body-parser");
 const db = require("./config/db.js");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const session = require("express-session");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
 // app.use(
 //   '/login',
 //   createProxyMiddleware({
@@ -16,6 +28,7 @@ const session = require("express-session");
 // );
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 app.use(
   session({
     secret: "your-secret-key",
@@ -28,10 +41,6 @@ app.get("/", (req, res) => {
   console.log("/root");
   res.send("/root");
 });
-
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(cors());
 
 app.post("/login", (req, res) => {
   const { id, pw } = req.body;
@@ -362,7 +371,8 @@ app.get("/review/:pk", (req, res) => {
 });
 
 app.get("/userInfo", (req, res) => {
-  db.query("select * from user where pk = 1", (err, data) => {
+  const pk = req.session.user.pk;
+  db.query("select * from user where pk = ?", [pk], (err, data) => {
     if (!err) {
       res.send(data);
     } else {
@@ -420,13 +430,15 @@ app.get("/sales", (req, res) => {
 });
 
 app.get("/purchaseHistory", (req, res) => {
+  const pk = req.session.user.pk;
   db.query(
     "SELECT op.pk, o.orderDate, o.orderDate, p.menuName, op.price, u.address, u.addressDetail, s.name FROM `order` o " +
       "JOIN order_product op ON o.pk = op.orderPk " +
       "JOIN product p ON op.productPk = p.pk " +
       "JOIN user u ON o.userPk = u.pk " +
       "JOIN store s ON o.storePk = s.pk " +
-      "WHERE u.pk = 1",
+      "WHERE u.pk = ?",
+    [pk],
     (err, data) => {
       if (!err) {
         res.send(data);
@@ -475,6 +487,96 @@ app.post("/review", (req, res) => {
             }
           }
         );
+      }
+    }
+  );
+});
+
+// 메뉴 등록
+app.post("/menuRegistration", upload.single("file"), (req, res) => {
+  const file = req.file;
+  const imagePath = file.path; // 업로드된 파일의 경로
+
+  console.log("menuReigstration");
+
+  const storePk = JSON.parse(req.body.menuData).storePk;
+  const menuName = JSON.parse(req.body.menuData).menuName;
+  const menuName_eng = JSON.parse(req.body.menuData).menuName_eng;
+  const category = JSON.parse(req.body.menuData).category;
+  const description = JSON.parse(req.body.menuData).description;
+  const tag = JSON.parse(req.body.menuData).tag;
+  const ingredient = JSON.parse(req.body.menuData).ingredient;
+  const size = JSON.parse(req.body.menuData).size;
+  const price = JSON.parse(req.body.menuData).price;
+
+  db.query(
+    "INSERT INTO product (storePk, menuName, engName, category, description, tag, ingredient, size, price, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    [
+      storePk,
+      menuName,
+      menuName_eng,
+      category,
+      description,
+      tag,
+      ingredient,
+      size,
+      price,
+      imagePath,
+    ],
+    function (err, rows, fields) {
+      if ((err, rows, fields)) {
+        if (err) {
+          console.log("실패");
+        } else {
+          console.log("성공");
+        }
+      }
+    }
+  );
+});
+
+// 판매 수량 확인
+app.get("/SalesHistory", (req, res) => {
+  db.query(
+    "SELECT p.menuName, SUM(op.cnt) AS cnt " +
+      "FROM product p " +
+      "JOIN order_product op ON p.pk = op.productPk " +
+      "GROUP BY p.menuName",
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+        console.log(data);
+      } else {
+        console.log(err);
+      }
+    }
+  );
+});
+
+//차트
+app.get("/sales", (req, res) => {
+  const date = req.query.date;
+  db.query(
+    "SELECT CASE WHEN DAYOFWEEK(orderDate) = 1 THEN '일요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 2 THEN '월요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 3 THEN '화요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 4 THEN '수요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 5 THEN '목요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 6 THEN '금요일' " +
+      "WHEN DAYOFWEEK(orderDate) = 7 THEN '토요일' " +
+      "END AS dayOfWeek, SUM(op.price * op.cnt) AS totalSales " +
+      "FROM `order` o JOIN `order_product` op ON o.pk = op.orderPk " +
+      "WHERE orderDate >= DATE_SUB(?, INTERVAL DAYOFWEEK(?) - 1 DAY) " +
+      "AND orderDate <= DATE_ADD(?, INTERVAL 7 - DAYOFWEEK(?) + 1 DAY) " +
+      "GROUP BY dayOfWeek " +
+      "ORDER BY DAYOFWEEK(orderDate);",
+    [date, date, date, date],
+    (err, data) => {
+      if (!err) {
+        res.send(data);
+        console.log(data);
+      } else {
+        console.log(err);
       }
     }
   );
