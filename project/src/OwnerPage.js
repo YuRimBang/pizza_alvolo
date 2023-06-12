@@ -6,11 +6,12 @@ import SalesHistory from "./SalesHistory";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import MainUnder from './components/MainUnder';
 
 function OwnerPage() {
 
   const[salesHistory, setSalesHistory] = useState([]);
-
+  const [isBoxVisible, setIsBoxVisible] = useState(false);
   useEffect(() => {
     selectSalesHistory();
   }, [])
@@ -23,7 +24,8 @@ function OwnerPage() {
 
   return (
     <div className="background">
-      <Header />
+      <Header isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></Header>
+      <MainUnder isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></MainUnder>
       <OwnerPageHeader />
     </div>
   );

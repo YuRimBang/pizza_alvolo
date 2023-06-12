@@ -1,15 +1,18 @@
-import React, { useState } from "react";
 import SalesInfo from "./components/SalesInfo";
 import "./css/OwnerPage.css";
 import ChartComponent from "./components/ChartComponent"; 
 import Header from "./components/Header";
+import MainUnder from './components/MainUnder';
 import OwnerPageHeader from "./components/OwnerPageHeader";
+import React, { useState } from "react";
 
 function SalesHistory({ salesInfo }) {
+  const [isBoxVisible, setIsBoxVisible] = useState(false);
   return (
     
     <div>
-      <Header />
+      <Header isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></Header>
+      <MainUnder isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></MainUnder>
       <OwnerPageHeader />
       <div className="sales_info">
       <div className="sales_info_title">

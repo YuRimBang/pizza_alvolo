@@ -1,5 +1,6 @@
 import "../src/css/ViewReview.css";
 import Header from "./components/Header";
+import MainUnder from './components/MainUnder';
 import ReviewList from "./components/ReviewList";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -8,7 +9,7 @@ import { useParams } from "react-router-dom";
 function ViewReview() {
   const [reviewPizzaInfo, setReviewPizzaInfo] = useState({});
   const [review, setReview] = useState([]);
-
+  const [isBoxVisible, setIsBoxVisible] = useState(false);
   const { pizzaPk } = useParams();
 
   console.log(pizzaPk);
@@ -38,7 +39,8 @@ function ViewReview() {
   };
   return (
     <div>
-      <Header></Header>
+      <Header isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></Header>
+      <MainUnder isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></MainUnder>
       <div className="viewReview">
         <div className="pizza_info">
           <div className="pizza_image">

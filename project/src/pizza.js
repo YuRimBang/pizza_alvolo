@@ -4,12 +4,13 @@ import PizzaTitle from "./components/PizzaTitle";
 import PizzaTapMenu from "./components/PizzaTapMenu";
 import PizzaSelectKategoire from "./components/PizzaSelectKategoire";
 import PizzaMenu from "./components/PizzaMenu";
+import MainUnder from "./components/MainUnder";
 
 function Pizza() {
   const [activeTab, setActiveTab] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedOption, setSelectedOption] = useState();
-
+  const [isBoxVisible, setIsBoxVisible] = useState(false);
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
@@ -20,7 +21,8 @@ function Pizza() {
 
   return (
     <div className="background">
-      <Header />
+       <Header isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></Header>
+      <MainUnder isBoxVisible={isBoxVisible} setIsBoxVisible={setIsBoxVisible}></MainUnder>
       <PizzaTitle />
       <PizzaTapMenu
         activeTab={activeTab}
